@@ -11,11 +11,52 @@
 
 ## To-do
 
-### 在Vue中引入Socket.io
+### 前后端使用Socket.io实时通信
+
+#### Vue中使用Socket.io
 
 >npm install vue-socket.io socket.io-client --save
 
+- 首先在main.js中引入
+```$xslt
+import VueSocketIo from 'vue-socket.io'
+import socketIo from 'socket.io-client'
 
+Vue.use(VueSocketIo, socketIo('http://localhost:3000'))//服务器地址
+```
+- 在Vue组件中使用(示例)
+```$xslt
+sockets: {
+    connect(){
+        console.log('connected successfully')
+    }
+},
+methods: {
+    sendMessage(msg) {
+        this.$socket.emit('test', msg)  //后台获取名为test 的消息
+    }
+}
+```
+#### Node中使用Socket.io
+
+> npm install socket.io --save
+
+- 在app.js中引入(以Koa为例)
+```$xslt
+const Koa = require('koa')
+const app = new Koa()
+const http = require('http').createServer(app.callback())
+const io = reuire('socket.io')(http)
+
+http.listen(3000)
+
+io.on('connection', (socket) => {
+    console.log('connect success')
+    socket.on('test', (data) => {   //此处的test与前端emit中的相对应
+        console.log('messge => ' + data)
+    })
+})
+```
 ### 普通用户
 
 姓名，学号，性别，出生年月
