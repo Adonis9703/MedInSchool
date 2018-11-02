@@ -33,7 +33,7 @@ sockets: {
 },
 methods: {
     sendMessage(msg) {
-        this.$socket.emit('test', msg)  //后台获取名为test 的消息
+        this.$socket.emit('test', msg)  //向后台发送名为test 的消息
     }
 }
 ```
