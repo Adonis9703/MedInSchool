@@ -13,6 +13,10 @@ router.get('/', async (ctx) => {
   ctx.body = 'hello service'
 });
 
+router.get('/test', async ctx => {
+  ctx.body = 'test'
+})
+
 app.use(router.routes());
 //app.use(cros())
 
