@@ -3,13 +3,18 @@
 
 ## 技术栈
 
-前端：Vue，Vue-router，Vuex，Vue-cli，Axios，scss,
+前端：Vue，Vue-router，Vuex，Vue-cli，Axios，scss
 
 后端：Node.js，Koa2
 
 其他：Socket.io，MySql
 
 ## To-do
+
+### 在Vue中引入Socket.io
+
+>npm install vue-socket.io socket.io-client --save
+
 
 ### 普通用户
 
