@@ -2,6 +2,7 @@ import axios from 'axios'
 // import Qs from 'qs'
 // import { logger } from '@/utils/index'
 // import { Toast } from 'vant'
+import {Loading} from 'element-ui'
 
 export const setURL = (url, args) => {
   if (typeof url === 'undefined') {
@@ -95,17 +96,17 @@ const postResArraybuffer = {
 // let loading
 export const post = (option) => {
   let url = setURL(option.url, option.requestParam)
-  // let isLoading = option.isLoading
-  // if (isLoading) {
-  //   if (loading) {
-  //     loading.clear()
-  //   }
-  //   loading = Toast.loading({
-  //     mask: true,
-  //     duration: 10000,
-  //     message: '加载中...'
-  //   })
-  // }
+  let isLoading = option.isLoading
+  if (isLoading) {
+    // if (loading) {
+    //   loading.clear()
+    // }
+    // loading = Toast.loading({
+    //   mask: true,
+    //   duration: 10000,
+    //   message: '加载中...'
+    // })
+  }
   let param
 
   if (option.param) {
@@ -146,9 +147,6 @@ export const post = (option) => {
         // }
         reject(response)
       }
-      logger.log('=====>' + url + '<=======')
-      logger.log(param)
-      logger.log(response)
     }).catch((error) => {
       // if (isLoading) {
       //   if (loading) { loading.clear() }
@@ -158,9 +156,6 @@ export const post = (option) => {
         Toast.fail('网络或服务器异常,请检查网络')
       }
       reject(error || {})
-      logger.log('=====>' + url + '<=======')
-      logger.log(param)
-      logger.log(error)
     })
   })
 }

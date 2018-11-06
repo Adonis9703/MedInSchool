@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <button @click="test">aaaa</button>
   </div>
 </template>
 
@@ -10,27 +11,21 @@
       return {
         msg: 'Welcome to Your Vue.js App'
       }
+    },
+    methods: {
+      test() {
+        this.$post({
+          url: this.$apis.hello,
+          // method: 'get'
+        }).then(res => {
+          console.log(res)
+        })
+        // this.$socket.emit('test')
+      }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  h1, h2 {
-    font-weight: normal;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  a {
-    color: #42b983;
-  }
 </style>
