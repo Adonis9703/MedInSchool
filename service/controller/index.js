@@ -14,7 +14,10 @@ const login = async (data) => {
   }
   // return user;
 }
-
+//todo 查询在线医生列表
+//todo 点对点聊天
+//todo 接收处方
+//todo 查询附近药房、药店
 module.exports = {
   register,
   login
