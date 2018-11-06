@@ -15,7 +15,11 @@
     methods: {
       test() {
         this.$post({
-          url: this.$apis.hello,
+          url: this.$apis.login,
+          param: {
+            id: '1',
+          },
+          postType: 'json'
           // method: 'get'
         }).then(res => {
           console.log(res)

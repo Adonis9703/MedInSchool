@@ -1,7 +1,5 @@
 import axios from 'axios'
 // import Qs from 'qs'
-// import { logger } from '@/utils/index'
-// import { Toast } from 'vant'
 import {Loading} from 'element-ui'
 
 export const setURL = (url, args) => {
@@ -28,21 +26,10 @@ const postBase = {
   url: '/post',
   // 请求方法同上
   method: 'post', // default
-  // transformRequest: [
-  //   function (data) {
-  //     // 这里可以在发送请求之前对请求数据做处理，比如form-data格式化等，这里可以使用开头引入的Qs（这个模块在安装axios的时候就已经安装了，不需要另外安装）
-  //     data = Qs.stringify(data)
-  //     return data
-  //   }
-  // ],
-  // `paramsSerializer` 是一个负责 `params` 序列化的函数
-  // paramsSerializer: function (params) {
-  //   return Qs.stringify(params)
-  // },
   // 请求头信息
   headers: {
-    // 'Content-Type': 'application/x-www-form-urlencoded;charset-utf-8'
-    'Content-Type': 'application/json;charset=UTF-8'
+    'Content-Type': 'application/x-www-form-urlencoded;charset-utf-8'
+    // 'Content-Type': 'application/json;charset=UTF-8'
   },
   // 设置超时时间
   timeout: 50000,
@@ -98,14 +85,6 @@ export const post = (option) => {
   let url = setURL(option.url, option.requestParam)
   let isLoading = option.isLoading
   if (isLoading) {
-    // if (loading) {
-    //   loading.clear()
-    // }
-    // loading = Toast.loading({
-    //   mask: true,
-    //   duration: 10000,
-    //   message: '加载中...'
-    // })
   }
   let param
 
@@ -137,20 +116,16 @@ export const post = (option) => {
   return new Promise((resolve, reject) => {
     axios[method](url, param, postType).then((response) => {
       // if (isLoading) {
-      //   if (loading) { loading.clear() }
       // }
       if (response.status === 200) {
         resolve(response)
       } else {
         // if (isLoading) {
-        //   // todo 哪些状态不要手动处理的
         // }
         reject(response)
       }
     }).catch((error) => {
       // if (isLoading) {
-      //   if (loading) { loading.clear() }
-      //
       // }
       if (!error || error.status === 404 || error.status === 500 || error.status === 502 || error.status === 503 || error.status === 504) {
         Toast.fail('网络或服务器异常,请检查网络')
