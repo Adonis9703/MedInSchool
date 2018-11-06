@@ -1,12 +1,18 @@
 const {userAdd, userGet} = require('../database/dao')
 
-const register = async function (data) {
+//注册
+const register = async (data) => {
   await userAdd(data)
 }
-
-const login = async function (data) {
+//登录
+const login = async (data) => {
   let user = await userGet(data)
-  return user;
+  if (user === false) {
+    return false
+  } else {
+    return data.password === user.password;
+  }
+  // return user;
 }
 
 module.exports = {

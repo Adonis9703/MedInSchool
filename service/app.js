@@ -19,14 +19,6 @@ app.use(cros({
 app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods());
 
-//
-// user.create({
-//   id: '6',
-//   name: 'llll'
-// }).then(() => {
-//   console.log('created')
-// })
-
 io.on('connection', socket => {
   console.log('service connected');
   socket.on('test', data => {

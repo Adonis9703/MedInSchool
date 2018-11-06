@@ -19,7 +19,8 @@ let user = sequelize.define('userinfo', {
   name: Sequelize.STRING,
   studentId: Sequelize.STRING,
   idCard: Sequelize.STRING,
-  sex: Sequelize.STRING
+  sex: Sequelize.STRING,
+  password: Sequelize.STRING
 }, {
   timestamps: false,
   freezeTableName: true

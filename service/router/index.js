@@ -14,11 +14,13 @@ router
   })
   .post('/login', async ctx => {
     let temp = await login(ctx.request.body)
-    if (temp) {
+    if (temp != false) {
+      console.log('===> 用户登录成功 <===')
       ctx.body = {
         msg: '登录成功'
       }
     } else {
+      console.log('===> 用户登录失败 <===')
       ctx.body = {
         msg: '登录失败'
       }
