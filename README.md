@@ -1,18 +1,19 @@
 # MedInSchool
-该项目用作毕业设计
+
+浙科医务室 医生端+后台
 
 现阶段 h5学生端，h5医生端
 
 后期预计小程序化
 ## 技术栈
 
-前端：Vue，Vue-router，Vuex，Vue-cli，Axios，scss
+>前端：Vue，Vue-router，Vuex，Vue-cli，Axios，scss
 
-后端：Node.js，Koa2
+>后端：Node.js，Koa2
 
-其他：Socket.io，MySql
+>其他：Socket.io，MySql
 
-## To-do
+## 技术相关
 
 ### 前后端使用Socket.io实时通信
 

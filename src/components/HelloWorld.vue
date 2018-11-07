@@ -15,21 +15,21 @@
     },
     methods: {
       register() {
-        this.$post({
-          url: this.$apis.register,
-          param: {
-            id: '1',
-            name: 'Alex',
-            studentId: '5150510116',
-            idCard: '330821199703104213',
-            sex: '男',
-            password: '123456'
-          },
-          postType: 'json'
-          // method: 'get'
-        }).then(res => {
-          console.log(res)
-        })
+        // this.$post({
+        //   url: this.$apis.register,
+        //   param: {
+        //     id: '1',
+        //     name: 'Alex',
+        //     studentId: '5150510116',
+        //     idCard: '330821199703104213',
+        //     sex: '男',
+        //     password: '123456'
+        //   },
+        //   postType: 'json'
+        //   // method: 'get'
+        // }).then(res => {
+        //   console.log(res)
+        // })
         // this.$socket.emit('test')
       },
       login() {
