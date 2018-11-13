@@ -22,14 +22,14 @@
 >npm install vue-socket.io socket.io-client --save
 
 - 首先在main.js中引入
-```$xslt
+```
 import VueSocketIo from 'vue-socket.io'
 import socketIo from 'socket.io-client'
 
 Vue.use(VueSocketIo, socketIo('http://localhost:3000'))//服务器地址
 ```
 - 在Vue组件中使用(示例)
-```$xslt
+```
 sockets: {
     connect(){
         console.log('connected successfully')
@@ -46,7 +46,7 @@ methods: {
 > npm install socket.io --save
 
 - 在app.js中引入(以Koa为例)
-```$xslt
+```
 const Koa = require('koa')
 const app = new Koa()
 const http = require('http').createServer(app.callback())
@@ -61,6 +61,36 @@ io.on('connection', (socket) => {
     })
 })
 ```
+
+#### 通过Socket.io 实现私聊
+
+>每次客户端和服务器通过socket连接时，都会产生一个socket对象
+
+获取该socket对象的唯一id，例如：
+```
+io.on('connection', socket => {
+    console.log('socket id', socket.id)
+    socket.on('disconnect', () => {
+        console.log('disconenct', socket.id)
+    })
+})
+```
+>我们可以在数据库中维护一个socket.id和用户id的映射表
+
+在每次用户上线时，更新映射表中的数据，例如：
+```
+socket.on('login', async userId => {
+    awawit someMethod(userId, socket.id)
+})
+```
+原型上体现：当用户选择一个医生后，获取该医生id，到映射表中拿到相对应的socket id，通过io.to(socketId).emit()实现私聊
+```
+io.to(socket.id).emit('message','surprise'); 
+```
+https://blog.csdn.net/koastal/article/details/53677766
+
+客户端的用户名
+
 ### 普通用户
 
 姓名，学号，性别，出生年月

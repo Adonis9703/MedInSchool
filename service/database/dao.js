@@ -1,40 +1,75 @@
-const {user} = require('../database/entity')
+const {student, socketInfo} = require('../database/entity')
 
-const userAdd = function (data) {
-  user.create({
-    id: data.id,
-    name: data.name,
-    studentId: data.studentId,
-    idCard: data.idCard,
-    sex: data.sex,
-    password: data.password
-  }).then((u) => {
-    console.log('DAO 注册信息录入数据库：\n', u.dataValues)
+const socketAdd = async (data) => {
+  await socketInfo.create({...data}).then(res => {
+    console.log('===> 新增 socket 信息成功 <===')
+    return true
+  }, err => {
+    console.log('===> 新增 socket 信息失败 <===')
+    return false
   })
 };
 
-const userGet = async (data) => {
-  try {
-    let temp = await user.findAll({where: {studentId: data.studentId}});
-    console.log('===> 用户信息DAO <===\n', temp[0].dataValues)
-    return temp[0].dataValues
-  } catch (e) {
-    console.log('===> 未查询到相关用户 <===\n', data)
-    return false
-  }
-  // user.findAll({
-  //   where: {
-  //     id: data.id
-  //   }
-  // }).then(res => {
-  //   return res[0].dataValues
-  // }).catch(err => {
-  //   console.log('===> 未查询到相关用户 <===\n ',data)
-  //   return false
-  // })
+const socketUpdate = async (data) => {
+  await socketInfo.update({...data}, {where: {userId: data.userId}})//userId 可以是 studentId 或 doctorId
+    .then(res => {
+      console.log('===> 更新 socket 信息成功 <===')
+      return true
+    }, err => {
+      console.log('===> 更新 socket 信息失败 <===')
+      return false
+    })
 };
 
+/**
+ * 新增学生信息
+ * @param data
+ * @returns {Promise<void>}
+ */
+const studentAdd = async function (data) {
+  await student.create({...data}).then(res => {
+    console.log('===> 新增用户成功 <===')
+    return true
+  }, err => {
+    console.log('===> 新增用户失败 <===')
+    return false
+  })
+};
+/**
+ * 查询学生信息
+ * @param data
+ * @returns {Promise<*>}
+ */
+const studentGet = async (data) => {
+  try {
+    let temp = await student.findAll({where: {studentId: data.studentId}});
+    console.log('===> 查询到该用户 <===\n', temp[0].dataValues)
+    return temp[0].dataValues
+  } catch (e) {
+    console.log('===> 未查询到相关用户 <===\n')
+    return false
+  }
+};
+/**
+ * 更新学生信息
+ * @param data
+ * @returns {Promise<boolean>}
+ */
+const studentUpdate = async (data) => {
+  try {
+    await studentGet(data)
+    let temp = await student.update({...data.newInfo}, {where: {studentId: data.studentId}})
+    return temp == 1
+  } catch (e) {
+    console.log('===> 更新用户失败 <===\n', e, data)
+    return false
+  }
+}
+
 module.exports = {
-  userAdd,
-  userGet
+  studentAdd,
+  studentGet,
+  studentUpdate,
+  socketAdd,
+  socketUpdate
 };

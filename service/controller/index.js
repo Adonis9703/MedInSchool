@@ -1,12 +1,12 @@
-const {userAdd, userGet} = require('../database/dao')
+const {studentAdd, studentGet, studentUpdate} = require('../database/dao')
 
 //注册
 const register = async (data) => {
-  await userAdd(data)
+  return await studentAdd(data)
 }
 //登录
 const login = async (data) => {
-  let user = await userGet(data)
+  let user = await studentGet(data)
   if (user === false) {
     return false
   } else {
@@ -14,9 +14,13 @@ const login = async (data) => {
   }
   // return user;
 }
+//修改用户信息
+const updateStudent = async data => {
+  return await studentUpdate(data)
+}
 //todo 所有用户
 //todo 点对点聊天
-//todo 修改密码
+//todo 修改个人信息
 
 //todo 学生端
 //todo 查询在线医生列表
@@ -29,5 +33,6 @@ const login = async (data) => {
 
 module.exports = {
   register,
-  login
+  login,
+  updateStudent
 }

@@ -11,25 +11,11 @@
  Target Server Version : 80013
  File Encoding         : 65001
 
- Date: 13/11/2018 17:27:30
+ Date: 13/11/2018 14:12:49
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for socketinfo
--- ----------------------------
-DROP TABLE IF EXISTS `socketinfo`;
-CREATE TABLE `socketinfo`  (
-  `userId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `socketId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of socketinfo
--- ----------------------------
-INSERT INTO `socketinfo` VALUES ('5150510116', 'PajXa3oqFPflXdJ6AAAB');
 
 -- ----------------------------
 -- Table structure for studentinfo

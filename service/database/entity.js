@@ -11,19 +11,32 @@ let sequelize = new Sequelize(config.database, config.username, config.password,
   }
 })
 
-let user = sequelize.define('userinfo', {
-  id: {
+let student = sequelize.define('studentInfo', {
+  studentId: {
     type: Sequelize.STRING,
     primaryKey: true
   },
   name: Sequelize.STRING,
-  studentId: Sequelize.STRING,
   idCard: Sequelize.STRING,
   sex: Sequelize.STRING,
-  password: Sequelize.STRING
+  password: Sequelize.STRING,
+  tel: Sequelize.STRING,
+  bloodType: Sequelize.STRING,
+  otherInfo: Sequelize.STRING,
+  allergy: Sequelize.STRING
 }, {
   timestamps: false,
   freezeTableName: true
 })
 
-module.exports = {user}
+let socketInfo = sequelize.define('socketInfo', {
+  userId: Sequelize.STRING,
+  socketId: Sequelize.STRING,
+}, {
+  timestamps: false,
+  freezeTableName: true
+})
+module.exports = {
+  student,
+  socketInfo
+}
