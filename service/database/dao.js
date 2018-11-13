@@ -13,7 +13,7 @@ const studentAdd = async function (data) {
 const studentGet = async (data) => {
   try {
     let temp = await student.findAll({where: {studentId: data.studentId}});
-    console.log('===> 用户信息DAO <===\n', temp[0].dataValues)
+    console.log('===> 查询到该用户 <===\n', temp[0].dataValues)
     return temp[0].dataValues
   } catch (e) {
     console.log('===> 未查询到相关用户 <===\n')

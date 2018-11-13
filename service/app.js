@@ -14,9 +14,10 @@ app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods());
 
 io.on('connection', socket => {
-  console.log('service connected');
-  socket.on('test', data => {
-    console.log('test connected')
+  console.log('service connected', socket.id);
+  socket.on('send', data => {
+    console.log('send from client', data)
+    io.emit('get', data)
   })
 });
 
