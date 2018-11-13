@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const {register, login} = require('../controller')
+const {register, login, updateStudent} = require('../controller')
 
 router
   .post('/hello', async ctx => {
@@ -9,8 +9,12 @@ router
     }
   })
   .post('/register', async ctx => {
-    await register(ctx.request.body)
-    ctx.body = {code: 200, msg: '注册成功'}
+    let temp = await register(ctx.request.body)
+    if (temp) {
+      ctx.body = {msg: '注册成功'}
+    } else {
+      ctx.body = {msg: '注册失败'}
+    }
   })
   .post('/login', async ctx => {
     let temp = await login(ctx.request.body)
@@ -20,6 +24,14 @@ router
     } else {
       console.log('===> 用户登录失败 <===')
       ctx.body = {msg: '登录失败'}
+    }
+  })
+  .post('/studentUpdate', async ctx => {
+    let temp = await updateStudent(ctx.request.body)
+    if (temp) {
+      ctx.body = {msg: '更新成功'}
+    } else {
+      ctx.body = {msg: '更新失败'}
     }
   })
 
