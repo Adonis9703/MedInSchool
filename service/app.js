@@ -17,7 +17,8 @@ io.on('connection', socket => {
   console.log('service connected', socket.id);
   socket.on('send', data => {
     console.log('send from client', data)
-    io.emit('get', data)
+    // io.sockets.emit('get', data)
+    io.to(socket.id).emit('get', data)
   })
 });
 

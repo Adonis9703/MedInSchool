@@ -61,6 +61,26 @@ io.on('connection', (socket) => {
     })
 })
 ```
+
+- 通过Socket.io 实现私聊
+
+>每次客户端和服务器通过socket连接时，都会产生一个socket对象
+
+获取该socket对象的唯一id，例如：
+```
+io.on('connection', socket => {
+    console.log('socket id', socket.id)
+    socket.on('disconnect', () => {
+        console.log('disconenct', socket.id)
+    })
+})
+```
+>我们可以在数据库中维护一个socket.id和用户id的映射表
+
+https://blog.csdn.net/koastal/article/details/53677766
+
+客户端的用户名
+
 ### 普通用户
 
 姓名，学号，性别，出生年月
