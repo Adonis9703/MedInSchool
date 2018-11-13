@@ -29,4 +29,14 @@ let student = sequelize.define('studentInfo', {
   freezeTableName: true
 })
 
-module.exports = {student}
+let socketInfo = sequelize.define('socketInfo', {
+  userId: Sequelize.STRING,
+  socketId: Sequelize.STRING,
+}, {
+  timestamps: false,
+  freezeTableName: true
+})
+module.exports = {
+  student,
+  socketInfo
+}

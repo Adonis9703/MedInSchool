@@ -1,5 +1,31 @@
-const {student} = require('../database/entity')
+const {student, socketInfo} = require('../database/entity')
 
+const socketAdd = async (data) => {
+  await socketInfo.create({...data}).then(res => {
+    console.log('===> 新增 socket 信息成功 <===')
+    return true
+  }, err => {
+    console.log('===> 新增 socket 信息失败 <===')
+    return false
+  })
+};
+
+const socketUpdate = async (data) => {
+  await socketInfo.update({...data}, {where: {userId: data.userId}})//userId 可以是 studentId 或 doctorId
+    .then(res => {
+      console.log('===> 更新 socket 信息成功 <===')
+      return true
+    }, err => {
+      console.log('===> 更新 socket 信息失败 <===')
+      return false
+    })
+};
+
+/**
+ * 新增学生信息
+ * @param data
+ * @returns {Promise<void>}
+ */
 const studentAdd = async function (data) {
   await student.create({...data}).then(res => {
     console.log('===> 新增用户成功 <===')
@@ -9,7 +35,11 @@ const studentAdd = async function (data) {
     return false
   })
 };
-
+/**
+ * 查询学生信息
+ * @param data
+ * @returns {Promise<*>}
+ */
 const studentGet = async (data) => {
   try {
     let temp = await student.findAll({where: {studentId: data.studentId}});
@@ -20,7 +50,11 @@ const studentGet = async (data) => {
     return false
   }
 };
-
+/**
+ * 更新学生信息
+ * @param data
+ * @returns {Promise<boolean>}
+ */
 const studentUpdate = async (data) => {
   try {
     await studentGet(data)
@@ -35,5 +69,7 @@ const studentUpdate = async (data) => {
 module.exports = {
   studentAdd,
   studentGet,
-  studentUpdate
+  studentUpdate,
+  socketAdd,
+  socketUpdate
 };
