@@ -5,12 +5,16 @@ const register = async (data) => {
   return await studentAdd(data)
 }
 //登录
-const login = async (data) => {
-  let user = await studentGet(data)
-  if (user === false) {
-    return false
+const login = async (ctx) => {
+  let user = await studentGet(ctx.request.body)
+  if (user.password === ctx.request.body.password) {
+    ctx.body = {
+      msg: '登录成功'
+    }
   } else {
-    return data.password === user.password;
+    ctx.body = {
+      msg: '登录失败'
+    }
   }
   // return user;
 }

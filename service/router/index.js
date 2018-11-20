@@ -16,16 +16,17 @@ router
       ctx.body = {msg: '注册失败'}
     }
   })
-  .post('/login', async ctx => {
-    let temp = await login(ctx.request.body)
-    if (temp !== false) {
-      console.log('===> 用户登录成功 <===')
-      ctx.body = {msg: '登录成功'}
-    } else {
-      console.log('===> 用户登录失败 <===')
-      ctx.body = {msg: '登录失败'}
-    }
-  })
+  // .post('/login', async ctx => {
+  //   //   let temp = await login(ctx.request.body)
+  //   //   if (temp !== false) {
+  //   //     console.log('===> 用户登录成功 <===')
+  //   //     ctx.body = {msg: '登录成功'}
+  //   //   } else {
+  //   //     console.log('===> 用户登录失败 <===')
+  //   //     ctx.body = {msg: '登录失败'}
+  //   //   }
+  //   // })
+  .post('/login',login)
   .post('/studentUpdate', async ctx => {
     let temp = await updateStudent(ctx.request.body)
     if (temp) {

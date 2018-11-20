@@ -69,7 +69,7 @@
           postType: 'json'
         }).then(res => {
           this.$socket.emit('login', {userId: '5150510116'})
-          console.log(res)
+          console.log(res.data)
         })
       }
     }
