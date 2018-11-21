@@ -89,17 +89,60 @@ io.to(socket.id).emit('message','surprise');
 ```
 https://blog.csdn.net/koastal/article/details/53677766
 
-客户端的用户名
 
-### 普通用户
+### 数据库设计
 
-姓名，学号，性别，出生年月
+- studnetInfo 学生信息表
 
-### 医务人员
+  ```
+  姓名，学号，身份证号，性别，密码，电话，血型，敏感，备注
 
-姓名，工号，性别，科室
+  name, studentId(key), idCard, sex, password, tel, bloodType, allergy, otherInfo
+  ```
+- doctorInfo 医生信息表
 
-### 处方单
+  姓名，工号，密码，电话，科室
 
-id，时间戳，患者信息，医生信息，价格，病情描述，药品内容
+  name, doctorId(key), password, tel, department
 
+- socketInfo 用户-socketId 映射表
+  > 存放用户id和socket连接关系的表，可用于私聊、判断用户在线状态等
+
+  ```
+  用户id(学号或工号)，socketId，在线标记
+
+  userId, socketId, status  
+  ```
+- chatHistory 聊天记录表
+  ```
+  chatId(自增key)，发送者id，接收者id，消息内容，消息时间
+  
+  chatId, senderId, receiverId, msgConent, msgTiming
+  ```
+  
+- requestInfo 问诊请求表
+
+  ```
+  问诊编号，学号，工号，主诉，问诊状态（待接诊，问诊中，已结束），处方id
+    
+  requestId(key), studentId, doctorId, requestText, requestImages, 
+  ```
+
+- prescriptionInfo 处方笺表
+
+  ```
+  处方id，问诊编号，医生姓名，科室，学生姓名，学生年龄，学生性别，学生主诉，
+  诊断，开具日期，药品详情，药品费用，问诊费用，其他费用，合计费用
+  
+  prescriptionId, requestId, doctorName, studentName, age, sex, requestText, diagnosis, 
+  date, Medicines, MedPrice, askPrice, otherPrice, totalPrice
+  
+  *药品详情 以JSON字符串的形式储存
+  ```
+ 
+- medicineInfo 药品库表
+  ```
+  药品id，药品名，规格，单价，库存，修改时间
+  
+  medicineId, medName, medSpecifications, price, count, updateTiming
+  ```
