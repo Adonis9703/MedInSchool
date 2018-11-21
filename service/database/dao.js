@@ -26,14 +26,22 @@ const socketUpdate = async (data) => {
  * @param data
  * @returns {Promise<void>}
  */
-const studentAdd = async function (data) {
-  await student.create({...data}).then(res => {
-    console.log('===> 新增用户成功 <===')
-    return true
-  }, err => {
+const studentAdd = async  (data) => {
+  try {
+    let temp = await student.create({...data})
+    console.log('===> 新增用户失败 <===')
+    return temp
+  } catch (e) {
     console.log('===> 新增用户失败 <===')
     return false
-  })
+  }
+  // await student.create({...data}).then(res => {
+  //   console.log('===> 新增用户成功 <===')
+  //   return true
+  // }, err => {
+  //   console.log('===> 新增用户失败 <===')
+  //   return false
+  // })
 };
 /**
  * 查询学生信息

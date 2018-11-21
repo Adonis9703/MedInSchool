@@ -43,7 +43,7 @@
           url: this.$apis.register,
           param: {
             name: 'Alex',
-            studentId: '5150510114',
+            studentId: '5150510111',
             idCard: '330821199703104213',
             sex: '男',
             password: '123456',

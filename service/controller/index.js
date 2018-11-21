@@ -1,8 +1,13 @@
 const {studentAdd, studentGet, studentUpdate} = require('../database/dao')
 
 //注册
-const register = async (data) => {
-  return await studentAdd(data)
+const register = async (ctx) => {
+  let user = await studentAdd(ctx.request.body)
+  if (user) {
+    ctx.body = {msg: '注册成功'}
+  } else {
+    ctx.body = {msg: '注册失败'}
+  }
 }
 //登录
 const login = async (ctx) => {
