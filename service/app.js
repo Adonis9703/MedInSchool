@@ -20,7 +20,7 @@ io.on('connection', socket => {
   socket.on('send', data => {
     console.log('send from client', data)
     // io.sockets.emit('get', data)
-    io.to(socket.id).emit('get', data)
+    io.to(data.receiver).emit('get', data)
   })
   socket.on('login', async data => {
     await socketUpdate({userId: data.userId, socketId: socket.id})

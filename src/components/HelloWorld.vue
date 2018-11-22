@@ -17,14 +17,14 @@
     },
     mounted() {
       this.$socket.on('get', (data) => {
-        if (data.id === '1') {
+
           console.log(data)
-        }
+
       })
     },
     methods: {
       chat() {
-        this.$socket.emit('send', {id: '2', msg: 'doctor client'})
+        this.$socket.emit('send', {id: '2', msg: 'doctor client', receiver: '9V3OHC27HVwK4QEAAAAA'})
       },
       update() {
         this.$post({
