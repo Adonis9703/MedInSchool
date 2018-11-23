@@ -30,8 +30,12 @@ let student = sequelize.define('studentInfo', {
 })
 
 let socketInfo = sequelize.define('socketInfo', {
-  userId: Sequelize.STRING,
+  userId: {
+    type: Sequelize.STRING,
+    primaryKey: true
+  },
   socketId: Sequelize.STRING,
+  status: Sequelize.STRING
 }, {
   timestamps: false,
   freezeTableName: true

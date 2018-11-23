@@ -18,21 +18,30 @@
     mounted() {
       this.$socket.on('get', (data) => {
 
-          console.log(data)
+        console.log(data)
 
       })
     },
     methods: {
       chat() {
-        this.$socket.emit('send', {id: '2', msg: 'doctor client', receiver: '9V3OHC27HVwK4QEAAAAA'})
+        this.$post({
+          url: this.$apis.getSocketInfo,
+          param: {
+            userId: '5150510116' //获取到要聊天对象的id 此处写死用作测试
+          },
+          postType: 'json'
+        }).then(res => {
+          console.log('对象socket信息: \n', res.data.socketInfo)
+          this.$socket.emit('send', {id: '2', msg: 'doctor client', receiver: res.data.socketInfo.socketId})
+        })
       },
       update() {
         this.$post({
           url: this.$apis.studentUpdate,
           param: {
-            studentId: '5150510116',
+            studentId: '515051011111',
             newInfo: {
-              studentId: '5150510115'
+              bloodType: 'D'
             }
           },
           postType: 'json'
@@ -43,7 +52,7 @@
           url: this.$apis.register,
           param: {
             name: 'Alex',
-            studentId: '5150510111',
+            studentId: '5150510110',
             idCard: '330821199703104213',
             sex: '男',
             password: '123456',
@@ -55,6 +64,8 @@
           postType: 'json'
           // method: 'get'
         }).then(res => {
+          if (res.data.msg === '注册成功')
+            this.$socket.emit('register', {userId: '5150510110'})
           console.log(res)
         })
         // this.$socket.emit('test')

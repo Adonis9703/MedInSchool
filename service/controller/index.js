@@ -1,4 +1,11 @@
-const {studentAdd, studentGet, studentUpdate} = require('../database/dao')
+const {
+  studentAdd,
+  studentGet,
+  studentUpdate,
+  socketAdd,
+  socketUpdate,
+  socketGet
+} = require('../database/dao')
 
 //注册
 const register = async (ctx) => {
@@ -24,8 +31,22 @@ const login = async (ctx) => {
   // return user;
 }
 //修改用户信息
-const updateStudent = async data => {
-  return await studentUpdate(data)
+const updateStudent = async (ctx) => {
+  let temp = await studentUpdate(ctx.request.body)
+  if (temp) {
+    ctx.body = {msg: '更新成功'}
+  } else {
+    ctx.body = {msg: '更新失败'}
+  }
+}
+
+const getSocketInfo = async (ctx) => {
+  let temp = await socketGet(ctx.request.body.userId)
+  if (temp) {
+    ctx.body= {
+      socketInfo: temp
+    }
+  }
 }
 //todo 所有用户
 //todo 点对点聊天
@@ -43,5 +64,6 @@ const updateStudent = async data => {
 module.exports = {
   register,
   login,
-  updateStudent
+  updateStudent,
+  getSocketInfo
 }

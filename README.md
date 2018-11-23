@@ -11,7 +11,7 @@
 
 >后端：Node.js，Koa2
 
->其他：Socket.io，MySql
+>其他：Socket.io，MySql，sequelize.js (https://itbilu.com/nodejs/npm/VkYIaRPz-.html)
 
 ## 技术相关
 
