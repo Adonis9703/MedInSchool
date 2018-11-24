@@ -1,22 +1,52 @@
-const {studentAdd, studentGet, studentUpdate} = require('../database/dao')
+const {
+  studentAdd,
+  studentGet,
+  studentUpdate,
+  socketAdd,
+  socketUpdate,
+  socketGet
+} = require('../database/dao')
 
 //注册
-const register = async (data) => {
-  return await studentAdd(data)
+const register = async (ctx) => {
+  let user = await studentAdd(ctx.request.body)
+  if (user) {
+    ctx.body = {msg: '注册成功'}
+  } else {
+    ctx.body = {msg: '注册失败'}
+  }
 }
 //登录
-const login = async (data) => {
-  let user = await studentGet(data)
-  if (user === false) {
-    return false
+const login = async (ctx) => {
+  let user = await studentGet(ctx.request.body)
+  if (user.password === ctx.request.body.password) {
+    ctx.body = {
+      msg: '登录成功'
+    }
   } else {
-    return data.password === user.password;
+    ctx.body = {
+      msg: '登录失败'
+    }
   }
   // return user;
 }
 //修改用户信息
-const updateStudent = async data => {
-  return await studentUpdate(data)
+const updateStudent = async (ctx) => {
+  let temp = await studentUpdate(ctx.request.body)
+  if (temp) {
+    ctx.body = {msg: '更新成功'}
+  } else {
+    ctx.body = {msg: '更新失败'}
+  }
+}
+
+const getSocketInfo = async (ctx) => {
+  let temp = await socketGet(ctx.request.body.userId)
+  if (temp) {
+    ctx.body= {
+      socketInfo: temp
+    }
+  }
 }
 //todo 所有用户
 //todo 点对点聊天
@@ -34,5 +64,6 @@ const updateStudent = async data => {
 module.exports = {
   register,
   login,
-  updateStudent
+  updateStudent,
+  getSocketInfo
 }

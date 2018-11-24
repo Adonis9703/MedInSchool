@@ -20,14 +20,24 @@ io.on('connection', socket => {
   socket.on('send', data => {
     console.log('send from client', data)
     // io.sockets.emit('get', data)
-    io.to(socket.id).emit('get', data)
+    io.to(data.receiver).emit('get', data)
   })
   socket.on('login', async data => {
-    await socketUpdate({userId: data.userId, socketId: socket.id})
+    await socketUpdate({userId: data.userId, socketId: socket.id, status: 'online'})
       .then(res => {
         console.log('socket id', socket.id)
         console.log('login', data)
       })
+  })
+  socket.on('register', async data => {
+    console.log(data)
+    await socketAdd({
+      userId: data.userId, socketId: socket.id, status: 'offline'
+    }).then(res => {
+      console.log('注册socketId:' + socket.id + ' userId:' + data.userId)
+    },err=> {
+      console.log('注册socket失败',err)
+    })
   })
 });
 
