@@ -15,6 +15,9 @@
 
 ## 技术相关
 
+> \*注意！ 长连接方式已改用 WebSocket！ Socket.io 已弃用！
+
+
 ### 前后端使用Socket.io实时通信
 
 #### Vue中使用Socket.io
