@@ -16,11 +16,11 @@
       }
     },
     mounted() {
-      this.$socket.on('get', (data) => {
-
-        console.log(data)
-
-      })
+      // this.$socket.on('get', (data) => {
+      //
+      //   console.log(data)
+      //
+      // })
     },
     methods: {
       chat() {
@@ -32,7 +32,7 @@
           postType: 'json'
         }).then(res => {
           console.log('对象socket信息: \n', res.data.socketInfo)
-          this.$socket.emit('send', {id: '2', msg: 'doctor client', receiver: res.data.socketInfo.socketId})
+          // this.$socket.emit('send', {id: '2', msg: 'doctor client', receiver: res.data.socketInfo.socketId})
         })
       },
       update() {
@@ -65,7 +65,7 @@
           // method: 'get'
         }).then(res => {
           if (res.data.msg === '注册成功')
-            this.$socket.emit('register', {userId: '5150510110'})
+            // this.$socket.emit('register', {userId: '5150510110'})
           console.log(res)
         })
         // this.$socket.emit('test')
@@ -79,7 +79,7 @@
           },
           postType: 'json'
         }).then(res => {
-          this.$socket.emit('login', {userId: '5150510116'})
+          // this.$socket.emit('login', {userId: '5150510116'})
           console.log(res.data)
         })
       }
