@@ -19,8 +19,10 @@ io.on('connection', socket => {
   console.log('service connected', socket.id);
   socket.on('send', data => {
     console.log('send from client', data)
-    // io.sockets.emit('get', data)
-    io.to(data.receiver).emit('get', data)
+    io.sockets.emit('get', {
+      msg: '这里是服务器'
+    })
+    // io.to(data.receiver).emit('get', data)
   })
   socket.on('login', async data => {
     await socketUpdate({userId: data.userId, socketId: socket.id, status: 'online'})

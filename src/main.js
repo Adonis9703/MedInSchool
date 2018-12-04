@@ -7,10 +7,9 @@ import {post, get, api} from './utils'
 import VueSocketIo from 'vue-socket.io'
 import socketIo from 'socket.io-client'
 
-// Vue.use(VueSocketIo, socketIo('http://localhost:3000'))
+// Vue.use(VueSocketIo, socketIo('ws://localhost:3000'))
 
 const webSocket = new WebSocket('ws://127.0.0.1:3000')
-
 Vue.use(ElementUI)
 
 Vue.prototype.$post = post
