@@ -6,6 +6,8 @@ const {
   socketUpdate,
   socketGet
 } = require('../database/dao')
+const jwt = require('jsonwebtoken');
+
 
 //注册
 const register = async (ctx) => {
@@ -20,7 +22,11 @@ const register = async (ctx) => {
 const login = async (ctx) => {
   let user = await studentGet(ctx.request.body)
   if (user.password === ctx.request.body.password) {
+    const token = jwt.sign({
+      name: user.name
+    }, 'secret', {expiresIn: '2h'}); //sign(第一个参数载荷，第二参数密钥，第三个参数配置参数)
     ctx.body = {
+      token: token,
       msg: '登录成功'
     }
   } else {

@@ -2,6 +2,7 @@ const Koa = require('koa');
 const router = require('./router/index');
 const bodyParser = require('koa-bodyparser');
 const cros = require('koa2-cors');
+const jwtKoa = require('koa-jwt')
 
 const app = new Koa();
 const http = require('http').createServer(app.callback());
@@ -14,6 +15,23 @@ http.listen(3000);
 app.use(cros({credentials: true}));
 app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods());
+
+app.use((ctx, next) => {
+  return next().catch((err) => {
+    if (err.status === 401) {
+      ctx.status = 401;
+      ctx.body = 'Protected resource, use Authorization header to get access\n';
+    } else {
+      throw err;
+    }
+  })
+})
+
+app.use(jwtKoa({
+  secret: 'secret'
+}).unless({
+  path: [/\/user\/login/]
+}));
 
 io.on('connection', socket => {
   console.log('service connected', socket.id);
@@ -37,8 +55,8 @@ io.on('connection', socket => {
       userId: data.userId, socketId: socket.id, status: 'offline'
     }).then(res => {
       console.log('注册socketId:' + socket.id + ' userId:' + data.userId)
-    },err=> {
-      console.log('注册socket失败',err)
+    }, err => {
+      console.log('注册socket失败', err)
     })
   })
 });
