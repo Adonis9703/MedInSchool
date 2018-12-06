@@ -16,6 +16,7 @@
 ## 技术相关
 
 > koa2 token 登录 http://www.cnblogs.com/linxin/p/9491342.html  
+https://blog.csdn.net/qq_37398213/article/details/81606824
 
 ### 前后端使用Socket.io实时通信
 
