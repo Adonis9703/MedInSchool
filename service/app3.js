@@ -9,6 +9,7 @@ const http = require('http').createServer(app.callback());
 const io = require('socket.io')(http);
 
 const {socketUpdate, socketAdd} = require('./database/dao');
+const {updateSocket} = require('./controller/socketController')
 
 http.listen(3000);
 
@@ -42,12 +43,15 @@ io.on('connection', socket => {
     })
     // io.to(data.receiver).emit('get', data)
   })
-  socket.on('login', async data => {
-    await socketUpdate({userId: data.userId, socketId: socket.id, status: 'online'})
-      .then(res => {
-        console.log('socket id', socket.id)
-        console.log('login', data)
-      })
+  // socket.on('login', async data => {
+  //   await socketUpdate({userId: data.userId, socketId: socket.id, status: 'online'})
+  //     .then(res => {
+  //       console.log('socket id', socket.id)
+  //       console.log('login', data)
+  //     })
+  // })
+  socket.on('login', data=> {
+    updateSocket(data, socket.id)
   })
   socket.on('register', async data => {
     console.log(data)
