@@ -46,10 +46,25 @@ const updateStudent = async (ctx) => {
   }
 }
 
+const checkToken = ctx => {
+  let token = ctx.request.header.token
+  console.log('客户端携带的token====>', token)
+  jwt.verify(token, 'secret', (err, decode) => {
+    console.log(`验证token`, err, decode)
+    if (err) {
+      ctx.body = {
+        message: 'token验证失败'
+      }
+    } else {
+      ctx.body = {message: 'token验证通过'}
+    }
+  })
+}
+
 const getSocketInfo = async (ctx) => {
   let temp = await socketGet(ctx.request.body.userId)
   if (temp) {
-    ctx.body= {
+    ctx.body = {
       socketInfo: temp
     }
   }
@@ -68,6 +83,7 @@ const getSocketInfo = async (ctx) => {
 //todo 生成处方单
 
 module.exports = {
+  checkToken,
   register,
   login,
   updateStudent,

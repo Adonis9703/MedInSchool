@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const {register, login, updateStudent, getSocketInfo} = require('../controller')
+const {register, login, updateStudent, getSocketInfo, checkToken} = require('../controller')
 
 router
   .post('/hello', async ctx => {
@@ -10,15 +10,8 @@ router
   })
   .post('/register', register)
   .post('/login',login)
-  // .post('/studentUpdate', async ctx => {
-  //   let temp = await updateStudent(ctx.request.body)
-  //   if (temp) {
-  //     ctx.body = {msg: '更新成功'}
-  //   } else {
-  //     ctx.body = {msg: '更新失败'}
-  //   }
-  // })
   .post('/studentUpdate', updateStudent)
   .post('/getSocketInfo', getSocketInfo)
+  .post('/checkToken', checkToken)
 
 module.exports = router
