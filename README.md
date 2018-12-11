@@ -13,6 +13,8 @@
 
 >其他：Socket.io，MySql，sequelize.js (https://itbilu.com/nodejs/npm/VkYIaRPz-.html)
 
+>云服务器ip：公网47.101.185.46  内网172.16.59.119
+
 ## 技术相关
 
 > koa2 token 登录 http://www.cnblogs.com/linxin/p/9491342.html  
