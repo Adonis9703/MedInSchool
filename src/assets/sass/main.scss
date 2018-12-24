@@ -1,0 +1,359 @@
+// 初始化
+* {
+    box-sizing: border-box;
+    transition: width 2s;
+    -moz-transition: width 2s;
+    -webkit-transition: width 2s;
+    -o-transition: width 2s;
+}
+
+.card-panel {
+  display: inline-block;
+  background: white;
+  min-width: 300px;
+  min-height: 200px;
+  border-radius: 8px;
+}
+
+.border-radius {
+  border-radius: 10px;
+}
+
+.z-index-1{
+  z-index: -1;
+}
+.z-index1 {
+  z-index: 1;
+}
+.hidden {
+  overflow: hidden;
+}
+.rotate180 {
+  transform: rotate(180deg);
+  transition: all .3s;
+}
+.rotate0 {
+  transform: rotate(0deg);
+  transition: all .3s;
+}
+.shadow {
+  //noinspection CssInvalidPropertyValue
+  box-shadow: 0 0 12px 0 rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  padding: 20px 0;
+  background-color: #32AE57;
+  color: white;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.van-popup {
+  border-radius: 10px!important;
+}
+
+body {
+    @extend .font-size0;
+    font-family: "PingFangSC-Regular", "microsoft yahei", "Arial"!important;
+    background-color: #f6f6f6;
+}
+
+input
+{
+    outline: none;
+}
+
+button {
+    border: none;
+    // background: none;
+    outline: none;
+}
+
+ul,
+li {
+    list-style: none;
+    box-sizing: border-box;
+}
+
+i {
+    display: inline-block;
+    font-style: normal;
+}
+
+a,
+a:hover,
+a:active,
+a:visited,
+a:link,
+a:focus {
+    background: none;
+}
+
+// 自定义van组件样式
+.custom-search {
+    background: #fff!important;
+    .van-cell {
+        background: #f6f6f6;
+        border-radius: 8px;
+    }
+}
+.van-popup__overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.van-icon {
+    font-family: vant-icon !important;
+}
+
+// 自定义小程序原生组件样式
+.wx-switch-input{
+    width:94px !important;
+    height:54px !important;
+    background-color: $color-theme !important;  // 选中背景
+    &::before{  // 未选中背景
+        width:94px !important;
+        height:54px !important;
+        background-color: #DDDDDD !important;
+    }
+    &::after{  // 圆圈
+        width:50px !important;
+        height:50px !important;
+    }
+}
+
+.input-placeholder {
+    color: #DDDDDD;
+}
+
+// 图标
+$theicons:
+    (aroundclinic, 132, 100),
+    (aroundpharmacy, 132, 100),
+    (fbanswer, 40, 40),
+    (fbquestion, 40, 40),
+    (free3A, 56, 30),
+    (freeaskmedicine, 124, 124),
+    (freecomplain, 64, 64),
+    (freedelete, 36, 36),
+    (freeenter, 54, 54),
+    (freelike, 28, 28),
+    (freepay, 40, 40),
+    (freephone, 18, 24),
+    (freequickmedicine, 124, 124),
+    (freerecommend, 32, 42),
+    (freesuccess, 106, 106),
+    (freetruck, 60, 60),
+    (freeupload, 120, 120),
+    (homeappoint, 68, 68),
+    (homebooking, 68, 68),
+    (homecheckreport, 68, 68),
+    (homefamilydoctor, 68, 68),
+    (homehospitalizedpay, 68, 68),
+    (homeimagequery, 68, 68),
+    (homeinsurancepay, 68, 68),
+    (homeintellguide, 68, 68),
+    (homelinecall, 68, 68),
+    (homelookforward, 68, 68),
+    (homemotherson, 68, 68),
+    (msgfail, 40, 40),
+    (msgmessage, 40, 40),
+    (msgreply, 40, 40),
+    (msgreport, 40, 40),
+    (msgstop, 40, 40),
+    (msgsuccess, 40, 40),
+    (msgvideo, 40, 40),
+    (myfeedback, 44, 44),
+    (myfocus, 44,44),
+    (mypatient, 44, 44),
+    (myrecipe, 44, 44),
+    (myrequest, 76, 76),
+    (orderappoint, 76, 76),
+    (orderbuy, 76, 76),
+    (orderimg, 76, 76),
+    (ordervideo, 76, 76),
+    (ordermedicine, 76, 76),
+    (rankexpert, 36, 36),
+    (ranknormal, 36, 36),
+    (starhalf, 24, 24);
+@each $icon,
+$width,
+$height in $theicons {
+    .theicon-#{$icon} {
+        display: inline-block;
+        width: #{$width}px;
+        height: #{$height}px;
+        background: url(../images/icon/icon_#{$icon}.png) no-repeat;
+        background-size: 100% 100%;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+$i: 100;
+@while $i>-1 {
+    .separator#{$i} {
+        height: #{$i}px;
+        background: #F8F8F8
+    }
+    $i: $i - 2;
+}
+
+//kk新增
+//noinspection ALL
+.arrow-right {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px
+}
+
+// 邮寄、自取标签
+//noinspection ALL
+@mixin delivery-tag($color) {
+    display: inline-block;
+    padding: 0 8px;
+    border-radius: 4px;
+    border: 1px solid $color;
+    line-height: 34px;
+    font-size: 24px;
+    color: $color;
+}
+.delivery-tag-express {
+    @include delivery-tag(#32AE57);
+}
+.delivery-tag-byself {
+    @include delivery-tag(#1C97FC);
+}
+.tag-rank {
+    @include delivery-tag(#E4631F);
+}
+
+// 关键词标签
+@mixin keyword-tag($color, $bordercolor) {
+    display: inline-block;
+    padding: 8px 28px;
+    color: $color;
+    border-radius: 200px;
+    border: 2px solid $bordercolor;
+}
+.keywords {
+    @include keyword-tag(#32AE57, rgba(50,174,87,0.60));
+}
+.keywords-uncheck {
+    @include keyword-tag(#333333, #DDDDDD);
+}
+
+// 默认标签
+@mixin tag-default($color, $bgcolor) {
+    display: inline-block;
+    background-color: $bgcolor;
+    color: $color;
+    border-radius: 1px;
+    font-size: 24px;
+    width: 70px;
+    padding: 2px 0;
+    height: 34px;
+    line-height: 34px;
+    font-weight: bold;
+    text-align: center;
+}
+.tag-default {
+    @include tag-default($color-orange, $color-orange-light);
+}
+
+// 下拉选项
+.drop-option {
+    li {
+        border-bottom: 1px solid #e2e2e2;
+        padding: 32px 28px;
+    }
+    li:last-child {
+        border-bottom: 1px solid transparent;
+    }
+}
+
+// 遮罩
+.themask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+// 首页
+.home {
+    .mainmodule-wrap {
+        margin: 0 auto;
+        position: relative;
+        z-index: 3;
+        top: -62px;
+        width: 716px;
+        height: 366px;
+        background: url(../images/back/back_mainmodule.png) no-repeat;
+        background-size: 100% 100%;
+        padding: 2px 40px 2px 40px;
+    }
+}
+
+// 公共样式
+.common-splitter {
+    height: 28px;
+    border-left: 2px solid #CDCDCD;
+}
+.scroll-hidden {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.border-orange {
+    border: 2px solid $color-orange;
+}
+.border-top-dashed1 {
+    border-top: 2px dashed #e2e2e2;
+}
+.height108 {
+  height: 108px;
+  line-height: 108px;
+}
+// 滑动删除控件
+.slide-list {
+    .slide-transitioin {
+        transition: all 0.15s;
+        transform: translateX(-120px);
+    }
+    .edit {
+        width: 120px;
+        text-align: center;
+    }
+    .delete {
+        width: 120px;
+        text-align: center;
+        background-color: #f6424b;
+        color: #ffffff;
+    }
+}
+
+// 截屏组件置底
+.capture-bottom {
+    top: auto !important;
+    bottom: 0 !important;
+}

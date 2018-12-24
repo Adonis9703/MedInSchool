@@ -12,15 +12,14 @@
     name: 'HelloWorld',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App'
-      }
+        msg: 'Welcome to Your Vue.js App'      }
     },
     mounted() {
-      // this.$socket.on('get', (data) => {
-      //
-      //   console.log(data)
-      //
-      // })
+      this.$socket.on('get', (data) => {
+
+        console.log(data)
+
+      })
     },
     methods: {
       chat() {

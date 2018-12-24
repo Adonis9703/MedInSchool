@@ -1,4 +1,4 @@
-let baseUrl = 'http://localhost:3000/'
+let baseUrl = 'http://47.101.185.46:3000'
 
 export const api = {
   hello: baseUrl + 'hello',

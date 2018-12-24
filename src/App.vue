@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" @click="test">
-    <button @click="$router.push({name: 'Doctor'})">doctor</button>
     <router-view/>
   </div>
 </template>
@@ -15,12 +13,12 @@ export default {
     }
   },
   methods: {
-    test() {
-      // this.$socket.emit('test')
-    }
   }
 }
 </script>
 
 <style>
+  body{
+    margin: 0;
+  }
 </style>
