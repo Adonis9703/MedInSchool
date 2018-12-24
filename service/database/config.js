@@ -1,5 +1,5 @@
 let config = {
-  database: 'nodetest',
+  database: 'mis',
   username: 'root',
   password: '123456',
   host: 'localhost',
