@@ -1,4 +1,5 @@
-const {student, socketInfo} = require('../database/entity')
+const {socketInfo, user, chatInfo, medicine, msgHistory, rpInfo} = require('../database/entity')
+
 
 const socketAdd = async (data) => {
   await socketInfo.create({...data}).then(res => {
@@ -31,61 +32,8 @@ const socketGet = async (userId) => {
   }
   
 }
-/**
- * 新增学生信息
- * @param data
- * @returns {Promise<void>}
- */
-const studentAdd = async (data) => {
-  try {
-    let temp = await student.create({...data})
-    console.log('===> 新增用户成功 <===', data)
-    return temp
-  } catch (e) {
-    console.log('===> 新增用户失败 <===', e)
-    return false
-  }
-  // await student.create({...data}).then(res => {
-  //   console.log('===> 新增用户成功 <===')
-  //   return true
-  // }, err => {
-  //   console.log('===> 新增用户失败 <===')
-  //   return false
-  // })
-};
-/**
- * 查询学生信息
- * @param data
- * @returns {Promise<*>}
- */
-const studentGet = async (data) => {
-  try {
-    let temp = await student.findById(data.studentId);
-    console.log('===> 查询到该用户 <===\n', temp.dataValues)
-    return temp.dataValues
-  } catch (e) {
-    console.log('===> 未查询到相关用户 <===\n', e)
-    return false
-  }
-};
-/**
- * 更新学生信息
- * @param data
- * @returns {Promise<boolean>}
- */
-const studentUpdate = async (data) => {
-  await studentGet(data).then(res => {
-    console.log('get', res)
-  })
-  let temp = await student.update({...data.newInfo}, {where: {studentId: data.studentId}})
-  console.log('temp', temp[0], temp[1])
-  return temp == 1
-}
 
 module.exports = {
-  studentAdd,
-  studentGet,
-  studentUpdate,
   socketAdd,
   socketUpdate,
   socketGet

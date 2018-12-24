@@ -17,22 +17,22 @@ app.use(cros({credentials: true}));
 app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods());
 
-app.use((ctx, next) => {
-  return next().catch((err) => {
-    if (err.status === 401) {
-      ctx.status = 401;
-      ctx.body = 'Protected resource, use Authorization header to get access\n';
-    } else {
-      throw err;
-    }
-  })
-})
-
-app.use(jwtKoa({
-  secret: 'secret'
-}).unless({
-  path: [/\/user\/login/]
-}));
+// app.use((ctx, next) => {
+//   return next().catch((err) => {
+//     if (err.status === 401) {
+//       ctx.status = 401;
+//       ctx.body = 'Protected resource, use Authorization header to get access\n';
+//     } else {
+//       throw err;
+//     }
+//   })
+// })
+//
+// app.use(jwtKoa({
+//   secret: 'secret'
+// }).unless({
+//   path: [/\/user\/login\/test/]
+// }));
 
 io.on('connection', socket => {
   console.log('service connected', socket.id);
