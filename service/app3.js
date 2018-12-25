@@ -8,8 +8,7 @@ const app = new Koa();
 const http = require('http').createServer(app.callback());
 const io = require('socket.io')(http);
 
-const {socketUpdate, socketAdd} = require('./database/dao');
-const {updateSocket} = require('./controller/socketController')
+const {socketInfo} = require('./database/entity')
 
 http.listen(3000);
 
@@ -17,52 +16,59 @@ app.use(cros({credentials: true}));
 app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods());
 
-// app.use((ctx, next) => {
-//   return next().catch((err) => {
-//     if (err.status === 401) {
-//       ctx.status = 401;
-//       ctx.body = 'Protected resource, use Authorization header to get access\n';
-//     } else {
-//       throw err;
-//     }
-//   })
-// })
-//
-// app.use(jwtKoa({
-//   secret: 'secret'
-// }).unless({
-//   path: [/\/user\/login\/test/]
-// }));
+app.use((ctx, next) => {
+  return next().catch((err) => {
+    if (err.status === 401) {
+      ctx.status = 401;
+      ctx.body = {
+        success: false,
+        message: '请登录后再操作',
+        data: null
+      }
+    } else {
+      throw err;
+    }
+  })
+})
 
-io.on('connection', socket => {
-  console.log('service connected', socket.id);
-  socket.on('send', data => {
-    console.log('send from client', data)
+app.use(jwtKoa({
+  secret: 'secret'
+}).unless({
+  path: [/\/register\/login/]
+}));
+
+io.on('connection', (socket) => {
+  console.log('客户端已连接 socket id =', socket.id)
+  socket.on('send', (data) => {
+    console.log('来自客户端的消息', data)
     io.sockets.emit('get', {
-      msg: '这里是服务器'
+      msg: '这是来自服务器的消息'
     })
-    // io.to(data.receiver).emit('get', data)
   })
-  // socket.on('login', async data => {
-  //   await socketUpdate({userId: data.userId, socketId: socket.id, status: 'online'})
-  //     .then(res => {
-  //       console.log('socket id', socket.id)
-  //       console.log('login', data)
-  //     })
-  // })
-  socket.on('login', data=> {
-    updateSocket(data, socket.id)
+  socket.on('register', async (data) => {
+      console.log('===> 用户注册，生成socket映射 <===')
+      let param = {
+        userId: data.userId,
+        socketId: socket.id
+      }
+      await socketInfo.create(param).then(res => {
+        console.log(res.dataValues)
+      }, err => {
+        console.log(err)
+      })
   })
-  socket.on('register', async data => {
-    console.log(data)
-    await socketAdd({
-      userId: data.userId, socketId: socket.id, status: 'offline'
+  socket.on('login', async (data) => {
+    console.log('===> 用户登录，更新socket映射 <===')
+    let param = {
+      userId: data.userId,
+      socketId: socket.id
+    }
+    await socketInfo.update(param,{
+      where: {userId: param.userId}
     }).then(res => {
-      console.log('注册socketId:' + socket.id + ' userId:' + data.userId)
-    }, err => {
-      console.log('注册socket失败', err)
+      console.log('===> socket 映射更新成功 <===')
     })
   })
-});
+})
 
 console.log('service running on localhost:3000');
