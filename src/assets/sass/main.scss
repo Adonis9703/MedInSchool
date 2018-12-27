@@ -14,6 +14,7 @@
   min-height: 200px;
 
 }
+
 .border-radius8 {
   border-radius: 8px;
 }
@@ -68,6 +69,22 @@
   border-radius: 10px !important;
 }
 
+.border-top1 {
+  border-top: 1px solid #e2e2e2;
+}
+
+.border-bottom1 {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.border-right1 {
+  border-right: 1px solid #e2e2e2;
+}
+
+.border-left1 {
+  border-left: 1px solid #e2e2e2;
+}
+
 body {
   font-size: 18px;
   font-family: "PingFangSC-Regular", "microsoft yahei", "Arial" !important;
@@ -80,7 +97,7 @@ input {
   border-radius: 5px;
 }
 
-input::placeholder{
+input::placeholder {
   color: #b9b9b9;
 }
 

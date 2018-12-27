@@ -1,23 +1,84 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="400px">
-        <div class="card-panel" @click="count++">
-          {{count}}
+      <el-aside width="400px" class="bgcolor-f6 border-right1">
+        <!--<header class="padding10X text-align-center">问诊列表</header>-->
+        <div class="chat-panel" v-for="(item, index) of chatList" :key="index">
+          <main class="flex-align">
+            <img :src="patient" class="block" style="height: 50px;width: 50px;">
+            <section class="width100 margin-left10">
+              <div class="bold margin-bottom4 flex-spacebetween">{{item.patient}}
+                <span class="dot margin-right12"></span>
+              </div>
+              <div class="font-size-2 flex-align-spacebetween color-666">
+                <div>{{item.chatInfo.user}}：{{item.chatInfo.message }}</div>
+                <div>{{item.chatInfo.time}}</div>
+              </div>
+            </section>
+          </main>
+          <div class="border-top1 font-size-2 flex-align-spacebetween margin-top10 padding-top4">
+            <div class="color-666">主诉：{{item.complain}}</div>
+            <div class="color-theme">问诊中</div>
+          </div>
         </div>
       </el-aside>
-      <el-aside width="550px" class="bgcolor-ddd">Aside2</el-aside>
+      <el-aside width="550px" class="bgcolor-f6 border-right1">
+        <chat-room :chatId="123123"></chat-room>
+      </el-aside>
       <el-main>Main</el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+  import doctor from '~/default/default_doctorhead.png'
+  import patient from '~/default/user_heading.png'
+  import chatRoom from '@/components/chat_room'
+
   export default {
+    components: {chatRoom: chatRoom},
     name: "chat",
     data() {
       return {
-        count: 0
+        doctor,
+        patient,
+        chatId: '123123',
+        chatList: [
+          {
+            doctor: 'Alex',
+            patient: '古力娜扎',
+            status: '问诊中', //0 待接诊,1问诊中,2已完成
+            complain: '脑壳疼',
+            chatInfo: {
+              id: '1',
+              user: 'Alex',
+              message: '你好',
+              time: '12:20'
+            }
+          },
+          {
+            doctor: 'WEQ',
+            patient: '1232',
+            complain: '脑壳疼',
+            chatInfo: {
+              id: '2',
+              user: 'Alex',
+              message: '你好',
+              time: '12:20'
+            }
+          }
+        ],
+      }
+    },
+    //store 里的数据实时渲染时 要在computed 里拿
+    computed: {
+      count() {
+        return this.$store.state.count
+      }
+    },
+    methods: {
+      addCount() {
+        this.$store.commit('setCount')
       }
     }
   }
@@ -25,14 +86,31 @@
 
 <style lang="scss" scoped>
   .el-aside {
-    text-align: center;
     height: 100vh;
   }
 
   .el-main {
     padding: 0;
     background-color: #E9EEF3;
-    text-align: center;
     height: 100vh;
+  }
+
+  .chat-panel {
+    background-color: white;
+    padding: 10px;
+    /*margin: 10px 0;*/
+    /*border-bottom: #e2e2e2 solid 1px;*/
+    border-top: #e2e2e2 solid 1px;
+    &:last-child {
+      border-bottom: #e2e2e2 solid 1px;
+    }
+  }
+
+  .dot {
+    background: red;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
   }
 </style>

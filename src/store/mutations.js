@@ -1,6 +1,6 @@
 const mutations = {
   setCount(state, value) {
-    state.count = value
+    state.count += 1
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="border-box">
     <el-container>
-      <el-aside width="250px">
+      <el-aside width="250px" class="text-align-center">
         <div class="margin-top100">
           <div class="bgcolor-white inline-block border-radius50 shadow">
             <img :src="head" class="block" style="height: 80px;width: 80px;">
@@ -63,7 +63,7 @@
   .el-aside {
     background-color: #32ae57;
     color: white;
-    text-align: center;
+    /*text-align: center;*/
     height: 100vh;
   }
 
@@ -71,7 +71,7 @@
     padding: 0;
     background-color: #E9EEF3;
     color: #333;
-    text-align: center;
+    /*text-align: center;*/
     height: 100vh;
   }
 
