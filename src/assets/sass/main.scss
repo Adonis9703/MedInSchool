@@ -10,8 +10,11 @@
 .card-panel {
   display: inline-block;
   background: white;
-  min-width: 300px;
+  min-width: 200px;
   min-height: 200px;
+
+}
+.border-radius8 {
   border-radius: 8px;
 }
 
@@ -77,6 +80,10 @@ input {
   border-radius: 5px;
 }
 
+input::placeholder{
+  color: #b9b9b9;
+}
+
 button {
   border: none;
   // background: none;
@@ -134,10 +141,6 @@ a:focus {
     width: 50px !important;
     height: 50px !important;
   }
-}
-
-.input-placeholder {
-  color: #DDDDDD;
 }
 
 // 图标
