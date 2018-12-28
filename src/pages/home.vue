@@ -69,7 +69,6 @@
 
   .el-main {
     padding: 0;
-    background-color: #E9EEF3;
     color: #333;
     /*text-align: center;*/
     height: 100vh;

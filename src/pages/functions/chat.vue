@@ -23,9 +23,12 @@
         </div>
       </el-aside>
       <el-aside width="550px" class="bgcolor-f6 border-right1">
+        <!--todo 点击对话列表 将问诊信息和聊天记录存入缓存 有缓存则显示聊天室-->
         <chat-room :chatId="123123"></chat-room>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+       <handle-rp></handle-rp>
+      </el-main>
     </el-container>
   </div>
 </template>
@@ -34,9 +37,10 @@
   import doctor from '~/default/default_doctorhead.png'
   import patient from '~/default/user_heading.png'
   import chatRoom from '@/components/chat_room'
+  import handleRp from "@/components/handle_rp";
 
   export default {
-    components: {chatRoom: chatRoom},
+    components: {handleRp: handleRp, chatRoom: chatRoom},
     name: "chat",
     data() {
       return {
@@ -91,7 +95,6 @@
 
   .el-main {
     padding: 0;
-    background-color: #E9EEF3;
     height: 100vh;
   }
 

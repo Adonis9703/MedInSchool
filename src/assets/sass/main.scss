@@ -69,6 +69,10 @@
   border-radius: 10px !important;
 }
 
+.border1 {
+  border: 1px solid #e2e2e2;
+}
+
 .border-top1 {
   border-top: 1px solid #e2e2e2;
 }
@@ -94,7 +98,6 @@ body {
 input {
   outline: none;
   border: none;
-  border-radius: 5px;
 }
 
 input::placeholder {
