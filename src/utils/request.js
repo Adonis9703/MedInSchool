@@ -1,6 +1,7 @@
 import axios from 'axios'
 // import Qs from 'qs'
 import {Loading} from 'element-ui'
+import store from '../store'
 
 export const setURL = (url, args) => {
   if (typeof url === 'undefined') {
@@ -103,6 +104,7 @@ export const post = (option) => {
     }
   }
   let postType = postBase
+  
   if (option.postType === 'text') {
     postType = postBaseResponseText
   } else if (option.postType === 'json') {
@@ -113,6 +115,11 @@ export const post = (option) => {
     postType = postResArraybuffer
   }
   let method = option.method ? option.method : 'post'
+  
+  if (store.state.token) {
+    postType.headers.token = store.state.token
+  }
+  
   return new Promise((resolve, reject) => {
     axios[method](url, param, postType).then((response) => {
       // if (isLoading) {

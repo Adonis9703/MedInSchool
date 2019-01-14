@@ -120,7 +120,7 @@ https://blog.csdn.net/koastal/article/details/53677766
 
   userId, socketId, status  
   ```
-- chatHistory 聊天记录表
+- msgHistory 聊天记录表
   ```
   chatId(自增key)，发送者id，接收者id，消息内容，消息时间
   

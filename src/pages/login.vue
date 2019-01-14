@@ -8,16 +8,16 @@
         <el-col :lg="5" :md="3">
           <div class="card-panel border-radius8 shadow margin-left60 paddingX26 padding-top26 padding-bottom20">
             <div class="">
-              <input class="input-dark block paddingX10 padding10X " placeholder="工号"/>
-              <input class="input-dark block paddingX10 padding10X margin-top20" placeholder="密码" type="password"/>
+              <input v-model="userId" class="input-dark block paddingX10 padding10X " placeholder="工号"/>
+              <input v-model="password" class="input-dark block paddingX10 padding10X margin-top20" placeholder="密码" type="password"/>
             </div>
             <el-checkbox v-model="checked" class="margin-top20">
               记住我
             </el-checkbox>
             <span class="margin-left70 font-size-4 color-999">忘记密码</span>
-            <div class="margin-top20">
+            <div class="margin-top20" @click="doLogin">
               <el-button type="primary" round>
-                <span class="paddingX60" @click="$router.push({name: 'chat'})">登陆</span>
+                <span class="paddingX60" >登陆</span>
               </el-button>
             </div>
           </div>
@@ -39,13 +39,31 @@
         anji,
         lake,
         playground,
-        checked: true
+        checked: true,
+        userId: '',
+        password: '',
+      }
+    },
+    methods: {
+      doLogin() {
+        this.$post({
+          url: this.$apis.login,
+          param: {
+            userId: this.userId,
+            password: this.password
+          },
+          postType: 'json'
+        }).then(res => {
+          this.$store.commit('setUserInfo', res.data.data)
+          this.$store.commit('setToken', res.data.token)
+          this.$router.push({name: 'chat'})
+        })
       }
     }
   }
 </script>
 <style>
-  .el-checkbox{
+  .el-checkbox {
     color: #999999;
   }
 </style>
