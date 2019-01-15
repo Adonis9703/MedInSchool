@@ -3,7 +3,7 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import store from '@/store/index'
-import {post, get, api} from './utils'
+import {post, get, api, date} from './utils'
 import VueSocketIo from 'vue-socket.io'
 import socketIo from 'socket.io-client'
 
@@ -19,6 +19,7 @@ Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.$apis = api
 Vue.prototype.$store = store
+Vue.prototype.$date = date
 
 Vue.config.productionTip = false
 

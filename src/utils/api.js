@@ -3,7 +3,8 @@ let baseUrl = 'http://localhost:3000'
 
 export const api = {
   login: baseUrl + '/login',
-  getChatReqListByDocId: baseUrl + '/getChatReqListByDocId',
-  getMsgHistory: baseUrl + '/getMsgHistory'
+  getChatReqListByDocId: baseUrl + '/getChatListByDocId',
+  getMsgHistory: baseUrl + '/getMsgHistory',
+  getUserInfo: baseUrl+ '/getUserInfoById',
   
 }

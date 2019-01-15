@@ -56,6 +56,7 @@
         }).then(res => {
           this.$store.commit('setUserInfo', res.data.data)
           this.$store.commit('setToken', res.data.token)
+          this.$socket.emit('refresh', res.data.data)
           this.$router.push({name: 'chat'})
         })
       }

@@ -10,6 +10,12 @@ const mutations = {
   },
   setMsgHistory(state, value) {
     state.msgHistory = value
+  },
+  addMsgHistory(state, value) {
+    state.msgHistory.push(value)
+  },
+  setPatientSocket(state, value) {
+    state.patientSocketId = value
   }
 }
 

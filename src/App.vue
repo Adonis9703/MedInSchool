@@ -9,8 +9,8 @@ export default {
   name: 'App',
   sockets: {
     connect() {
-      console.log(`connected to service`)
-    }
+      console.log(`成功连接至聊天服务器`)
+    },
   },
   methods: {
   }

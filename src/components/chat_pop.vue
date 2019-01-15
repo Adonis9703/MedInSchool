@@ -1,14 +1,14 @@
 <template>
   <div class="pop">
-    <!--患者-->
-    <div v-if="content.senderType==0" class=" flex-baseline float-right">
+    <!--医生-->
+    <div v-if="content.senderType==1" class=" flex-baseline float-right">
       <div class="color-gray padding-right10 font-size-4">{{content.msgTime}}</div>
       <div class="msg bgcolor-theme color-white margin-right10 font-size4">
         {{content.msgText}}
       </div>
       <img :src="doctor" class="block margin-right20" style="width: 55px;height: 55px;"/>
     </div>
-    <!--医生-->
+    <!--患者-->
     <div v-else class=" flex-baseline float-left">
       <img :src="patient" class="block margin-left20" style="width: 55px;height: 55px;"/>
       <div class="msg bgcolor-white margin-left10">

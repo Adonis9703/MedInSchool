@@ -63,6 +63,7 @@
       selectReq(item) {
         this.chatId = item.chatId
         this.getMessage()
+        this.getPatSocket(item)
         this.$store.commit('setChatInfo', item)
       },
       getMessage() {
@@ -74,6 +75,18 @@
           postType: 'json'
         }).then(res => {
           this.$store.commit('setMsgHistory', res.data.data)
+        })
+      },
+      getPatSocket(item) {
+        this.$post({
+          url: this.$apis.getUserInfo,
+          param: {
+            userId: item.patientId
+          },
+          postType: 'json'
+        }).then(res=>{
+          console.log(res.data.data.socketId)
+          this.$store.commit('setPatientSocket', res.data.data.socketId)
         })
       },
       getReqList() {
