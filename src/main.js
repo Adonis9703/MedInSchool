@@ -11,7 +11,7 @@ import '@/assets/sass/sass_index.scss'
 import '@/assets/iconfont/iconfont.css'
 import '@/assets/sass/element-variables.scss';
 
-Vue.use(VueSocketIo, socketIo('http://47.101.185.46:3000'))
+Vue.use(VueSocketIo, socketIo(api.base))
 // Vue.use(VueSocketIo, socketIo('http://localhost:3000'))
 
 Vue.use(ElementUI)

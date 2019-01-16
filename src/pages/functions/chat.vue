@@ -57,13 +57,17 @@
     //store 里的数据实时渲染时 要在computed 里拿
     computed: {},
     mounted() {
+      this.$socket.on('refreshChatList', () => {
+        this.$message.info('您有新的问诊请求！')
+        this.getReqList()
+      })
       this.getReqList()
     },
     methods: {
       selectReq(item) {
         this.chatId = item.chatId
         this.getMessage()
-        this.getPatSocket(item)
+        // this.getPatSocket(item)
         this.$store.commit('setChatInfo', item)
       },
       getMessage() {
@@ -77,18 +81,18 @@
           this.$store.commit('setMsgHistory', res.data.data)
         })
       },
-      getPatSocket(item) {
-        this.$post({
-          url: this.$apis.getUserInfo,
-          param: {
-            userId: item.patientId
-          },
-          postType: 'json'
-        }).then(res=>{
-          console.log(res.data.data.socketId)
-          this.$store.commit('setPatientSocket', res.data.data.socketId)
-        })
-      },
+      // getPatSocket(item) {
+      //   this.$post({
+      //     url: this.$apis.getUserInfo,
+      //     param: {
+      //       userId: item.patientId
+      //     },
+      //     postType: 'json'
+      //   }).then(res => {
+      //     console.log(res.data.data.socketId)
+      //     this.$store.commit('setPatientSocket', res.data.data.socketId)
+      //   })
+      // },
       getReqList() {
         this.$post({
           url: this.$apis.getChatReqListByDocId,

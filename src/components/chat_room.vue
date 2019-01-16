@@ -17,7 +17,8 @@
         </div>
       </div>
     </header>
-    <main class="padding-top60">
+    <main class="padding-top60" id="chatContainer">
+      <div @click="admissions">接诊</div>
       <chat-pop v-for="(item, index) of msgHistory" :key="index" :content="item"></chat-pop>
       <div style="clear: both;"></div>
       <!--<section class="paddingX30">-->
@@ -47,9 +48,10 @@
       <!--</div>-->
       <!--</section>-->
     </main>
+    <div class="width100" style="height: 80px"></div>
     <footer class="fixed bottom0 bgcolor-white padding10X paddingX10 border-top1" style="width: 549px;">
       <el-input placeholder="请输入内容" v-model.trim="text">
-        <el-button slot="append" @click="send">发送</el-button>
+        <el-button slot="append" @click="send" :disabled="chatInfo.chatStatus==0">发送</el-button>
       </el-input>
     </footer>
 
@@ -81,41 +83,47 @@
         }
       }
     },
-    watch: {},
+    watch: {
+      msgHistory() {
+        console.log(`滚动`)
+        this.$nextTick(() => {
+          let container = this.$el.querySelector("#chatContainer");
+          container.scrollTop = container.scrollHeight;
+        })
+      }
+    },
     data() {
       return {
         text: '',
         showDetail: true,
-        socketData: {
-          chatId: this.$store.state.chatInfo.chatId,
-          senderType: '1',
-          senderId: this.$store.state.userInfo.userId,
-          receiverId: this.$store.state.chatInfo.patientId,
-          msgText: this.text,
-          msgTime: new Date().toTimeString().substring(0, 5),
-          senderSocketId: this.$store.state.userInfo.socketId
-        }
       }
     },
     mounted() {
       this.$socket.on('historySaved', res => {
-        this.text=''
+        this.text = ''
         console.log(res)
       })
       this.$socket.on('service2doc', res => {
         this.$store.commit('addMsgHistory', res)
         console.log('客户端的消息', res)
       })
-      // setTimeout(() => {
-      //   this.showDetail = false
-      // },2000)
     },
-    // sockets: {
-    //   historySaved(res) {
-    //     console.log(res)
-    //   }
-    // },
     methods: {
+      admissions() {
+        let temp = this.$store.state.chatInfo
+        temp.chatStatus = 1
+        this.$post({
+          url: this.$apis.updateChatInfo,
+          param: temp,
+          postType: 'json'
+        }).then(res => {
+          if (res.data.success) {
+            console.log('更新问诊信息')
+            this.$store.commit('setChatInfo', res.data.data)
+            this.$socket.emit('admissions', this.$store.state.chatInfo)
+          }
+        })
+      },
       send() {
         if (this.text === '') {
           this.$message.info('内容不能为空！')

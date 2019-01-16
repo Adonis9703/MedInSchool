@@ -5,20 +5,24 @@
 </template>
 
 <script>
-export default {
-  name: 'App',
-  sockets: {
-    connect() {
-      console.log(`成功连接至聊天服务器`)
+  export default {
+    name: 'App',
+    sockets: {
+      connect() {
+        console.log(`成功连接至聊天服务器`)
+      },
     },
-  },
-  methods: {
+    methods: {},
+    mounted() {
+      this.$socket.emit('refresh', {
+        userId: this.$store.state.userInfo.userId
+      })
+    }
   }
-}
 </script>
 
 <style>
-  body{
+  body {
     height: 100%;
     margin: 0;
   }
