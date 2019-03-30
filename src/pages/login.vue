@@ -79,7 +79,7 @@
   .title {
     display: inline-block;
     letter-spacing: 5px;
-    font-family: "方正兰亭超细黑简体";
+    font-family: "方正兰亭超细黑简体","Microsoft YaHei UI Light";
     font-size: 80px;
   }
 

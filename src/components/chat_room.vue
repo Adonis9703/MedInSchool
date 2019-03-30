@@ -92,6 +92,16 @@
         })
       }
     },
+    sockets: {
+      service2doc(res) {
+        console.log('===> chat_room.vue 获取服务器转发的消息', res)
+        this.$store.commit('addMsgHistory', res)
+      },
+      historySaved(res) {
+        console.log('===> chat_room.vue 保存消息记录', res)
+        this.text = ''
+      }
+    },
     data() {
       return {
         text: '',
@@ -99,14 +109,17 @@
       }
     },
     mounted() {
-      this.$socket.on('historySaved', res => {
-        this.text = ''
-        console.log(res)
-      })
-      this.$socket.on('service2doc', res => {
-        this.$store.commit('addMsgHistory', res)
-        console.log('客户端的消息', res)
-      })
+      // console.log('===> chat_room.vue 聊天室初始化成功')
+      // this.$socket.on('historySaved', res => {
+      //   console.log('===> chat_room.vue 保存消息记录')
+      //   this.text = ''
+      //   console.log(res)
+      // })
+      // this.$socket.on('service2doc', res => {
+      //   console.log('===> chat_room.vue 获取服务器转发的消息')
+      //   this.$store.commit('addMsgHistory', res)
+      //   console.log('客户端的消息', res)
+      // })
     },
     methods: {
       admissions() {
