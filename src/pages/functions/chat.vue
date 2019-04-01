@@ -56,12 +56,14 @@
     },
     //store 里的数据实时渲染时 要在computed 里拿
     computed: {},
-    mounted() {
-      this.$socket.on('refreshChatList', () => {
+    sockets: {
+      refreshChatList() {
         console.log(`===> chat.vue 刷新问诊请求列表`)
         this.$message.info('您有新的问诊请求！')
         this.getReqList()
-      })
+      }
+    },
+    mounted() {
       this.getReqList()
     },
     methods: {

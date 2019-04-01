@@ -54,10 +54,14 @@
           },
           postType: 'json'
         }).then(res => {
-          this.$store.commit('setUserInfo', res.data.data)
-          this.$store.commit('setToken', res.data.token)
-          this.$socket.emit('refresh', res.data.data)
-          this.$router.push({name: 'chat'})
+          if (res.data.success) {
+            this.$store.commit('setUserInfo', res.data.data)
+            this.$store.commit('setToken', res.data.token)
+            this.$socket.emit('refresh', res.data.data)
+            this.$router.push({name: 'chat'})
+          } else {
+            this.$message.warning('账号密码错误！')
+          }
         })
       }
     }

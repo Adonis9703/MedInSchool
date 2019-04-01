@@ -14,10 +14,12 @@
     },
     methods: {},
     mounted() {
-      this.$socket.emit('refresh', {
-        userId: this.$store.state.userInfo.userId
-      })
-      console.log(`===> App.vue 刷新socket`)
+      if (this.$store.state.userInfo) {
+        this.$socket.emit('refresh', {
+          userId: this.$store.state.userInfo.userId
+        })
+        console.log(`===> App.vue 刷新socket`)
+      }
     }
   }
 </script>

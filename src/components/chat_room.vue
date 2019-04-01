@@ -18,7 +18,15 @@
       </div>
     </header>
     <main class="padding-top60" id="chatContainer">
-      <div @click="admissions">接诊</div>
+      <div class="paddingX40">
+        <div class="chat-detail shadow bgcolor-white margin-top20">
+          <div class="border-bottom1 padding20X paddingX20 color-theme font-size4 bold">
+            问诊信息
+          </div>
+          <div class="paddingX20 padding20X">{{chatInfo.patientName}}</div>
+        </div>
+      </div>
+      <!--<div @click="admissions">接诊</div>-->
       <chat-pop v-for="(item, index) of msgHistory" :key="index" :content="item"></chat-pop>
       <div style="clear: both;"></div>
       <!--<section class="paddingX30">-->
@@ -109,6 +117,9 @@
       }
     },
     mounted() {
+      setTimeout(() => {
+        this.showDetail = false
+      }, 2300)
       // console.log('===> chat_room.vue 聊天室初始化成功')
       // this.$socket.on('historySaved', res => {
       //   console.log('===> chat_room.vue 保存消息记录')
@@ -157,6 +168,9 @@
   }
 </script>
 <style lang="scss" scoped>
+  .chat-detail {
+    border-top: #32ae57 solid 6px;
+  }
   .hidden {
     height: 45px;
     transition: all .3s;
