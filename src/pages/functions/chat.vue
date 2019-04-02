@@ -19,7 +19,7 @@
             </section>
           </main>
           <div class="border-top1 font-size-2 flex-align-spacebetween margin-top10 padding-top4">
-            <div class="color-666">主诉：{{item.complain}}</div>
+            <div class="color-666" style="width: 300px;">主诉：{{item.complain}}</div>
             <div v-if="item.chatStatus == 0" class="">待接诊</div>
             <div v-if="item.chatStatus == 1" class="color-theme">问诊中</div>
           </div>

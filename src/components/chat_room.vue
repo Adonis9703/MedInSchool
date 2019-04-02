@@ -1,31 +1,48 @@
 <template>
   <div>
     <header class="fixed" style="width: 549px;">
-      <div :class="{'hidden': !showDetail,'show': showDetail}"
-           class=" bgcolor-white padding10X">
-        <div class="cursor-pointer text-align-center" @click="showDetail=!showDetail">
+      <div class=" bgcolor-white padding10X">
+        <div class="text-align-center" >
           <span class="bold">{{chatInfo.patientName}}</span>
-          <i class="icon-unfold color-theme" :class="{'rotate180' : showDetail, 'rotate0': !showDetail}"/>
-        </div>
-        <div class="margin10X padding-top10 paddingX10 font-size-2 border-top1">
-          <div>
-            患者信息
-          </div>
-          <div>
-            {{chatInfo.complain }}
-          </div>
         </div>
       </div>
     </header>
     <main class="padding-top60" id="chatContainer">
-      <div class="paddingX40">
-        <div class="chat-detail shadow bgcolor-white margin-top20">
-          <div class="border-bottom1 padding20X paddingX20 color-theme font-size4 bold">
-            问诊信息
+      <el-collapse-transition>
+        <div class="paddingX40 margin-bottom20" v-if="showDetail">
+          <div class="chat-detail shadow bgcolor-white margin-top20">
+            <div class="padding20X paddingX20 color-theme font-size4 border-bottom1 bold">
+              问诊信息
+            </div>
+            <div class="paddingX20 padding20X">
+              <div>
+                <span class="color-theme bold">患者：</span>
+                {{chatInfo.patientName}} · {{patientInfo.sex}} · {{patientInfo.age}}岁 · {{patientInfo.bloodType}}型血
+              </div>
+              <div class="margin-top10">
+                <span class="color-theme bold">过敏史：</span>
+                {{patientInfo.allergy || '暂无'}}
+              </div>
+              <div class="margin-top10">
+                <span class="color-theme bold">备注：</span>
+                {{chatInfo.other || '暂无'}}
+              </div>
+              <div class="margin-top10 ">
+                <span class="color-theme bold">主诉：</span>
+                {{chatInfo.complain}}
+              </div>
+            </div>
+            <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs">
+              <img class="bgcolor-theme inline-block" height="143" width="143" :src="item" v-for="(item, index) in 4" :key="index">
+            </div>
           </div>
-          <div class="paddingX20 padding20X">{{chatInfo.patientName}}</div>
+          <div v-if="chatInfo.chatStatus == 0" class="text-align-center padding20X">
+            <el-button type="success" slot="reference" icon="el-icon-check" circle @click="admissions"></el-button>
+            <el-button type="danger" slot="reference" icon="el-icon-close" circle></el-button>
+          </div>
         </div>
-      </div>
+      </el-collapse-transition>
+
       <!--<div @click="admissions">接诊</div>-->
       <chat-pop v-for="(item, index) of msgHistory" :key="index" :content="item"></chat-pop>
       <div style="clear: both;"></div>
@@ -57,8 +74,25 @@
       <!--</section>-->
     </main>
     <div class="width100" style="height: 80px"></div>
+    <section v-if="chatInfo.chatStatus == 1" class="fixed text-align-center paddingX20" style="bottom: 80px">
+      <el-popover
+        placement="right"
+        width="150"
+        trigger="hover"
+        content="查看问诊信息">
+        <el-button type="warning" slot="reference" icon="el-icon-document" circle @click="showDetail = !showDetail"></el-button>
+      </el-popover>
+      <el-popover
+        style="margin-left: 420px"
+        placement="left"
+        width="150"
+        trigger="hover"
+        content="为患者开具处方">
+        <el-button type="success" slot="reference" icon="el-icon-edit" circle></el-button>
+      </el-popover>
+    </section>
     <footer class="fixed bottom0 bgcolor-white padding10X paddingX10 border-top1" style="width: 549px;">
-      <el-input placeholder="请输入内容" v-model.trim="text">
+      <el-input placeholder="请输入内容" @keyup.enter.native="send"  v-model.trim="text">
         <el-button slot="append" @click="send" :disabled="chatInfo.chatStatus==0">发送</el-button>
       </el-input>
     </footer>
@@ -113,13 +147,13 @@
     data() {
       return {
         text: '',
-        showDetail: true,
+        showDetail: false,
+        patientInfo: {}
       }
     },
     mounted() {
-      setTimeout(() => {
-        this.showDetail = false
-      }, 2300)
+      this.getPatientInfo(this.chatInfo.patientId)
+      this.showDetail = this.chatInfo.chatStatus == 0
       // console.log('===> chat_room.vue 聊天室初始化成功')
       // this.$socket.on('historySaved', res => {
       //   console.log('===> chat_room.vue 保存消息记录')
@@ -133,6 +167,17 @@
       // })
     },
     methods: {
+      getPatientInfo(id) {
+        this.$post({
+          url: this.$apis.getUserInfo,
+          param: {
+            userId: id
+          },
+          postType: 'json'
+        }).then(res => {
+          this.patientInfo = res.data.data
+        })
+      },
       admissions() {
         let temp = this.$store.state.chatInfo
         temp.chatStatus = 1
@@ -143,6 +188,11 @@
         }).then(res => {
           if (res.data.success) {
             console.log('更新问诊信息')
+            this.$notify.success({
+              title: '成功',
+              message: '成功接诊，可以和患者进行沟通了！'
+            })
+            this.showDetail = false
             this.$store.commit('setChatInfo', res.data.data)
             this.$socket.emit('admissions', this.$store.state.chatInfo)
           }
@@ -150,7 +200,10 @@
       },
       send() {
         if (this.text === '') {
-          this.$message.info('内容不能为空！')
+          this.$notify.error({
+            title: '错误',
+            message: '内容不能为空！'
+          })
           return
         }
         let data = {
@@ -171,6 +224,7 @@
   .chat-detail {
     border-top: #32ae57 solid 6px;
   }
+
   .hidden {
     height: 45px;
     transition: all .3s;
