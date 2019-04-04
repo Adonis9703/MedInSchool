@@ -9,5 +9,6 @@ export const api = {
   getUserInfo: baseUrl + '/getUserInfoById',  //获取用户信息
   updateChatInfo: baseUrl + '/updateChat',  //更新问诊信息
   addMedInfo: baseUrl + '/addMedInfo',  //新增药品
-  getMedInfoList: baseUrl+ '/getMedInfoList', //获取药品列表
+  getMedInfoList: baseUrl + '/getMedInfoList', //获取药品列表
+  updateMedInfo: baseUrl + '/updateMedInfo',  //更新药品信息
 }
