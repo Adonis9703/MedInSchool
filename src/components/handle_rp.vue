@@ -8,13 +8,13 @@
       <section class="margin-top30 font-size-3 color-555">
         <div class=" border-bottom1 padding-bottom10">处方编号：{{rp.rpId}}</div>
         <div class="flex-align-spacebetween padding-top10 paddingX10">
-          <div>姓名：{{rp.patient.name}}</div>
-          <div>性别：{{rp.patient.sex}}</div>
-          <div>年龄：{{rp.patient.age}}</div>
+          <div>姓名：{{chatInfo.patientName}}</div>
+          <div>性别：{{patientInfo.sex}}</div>
+          <div>年龄：{{patientInfo.age}}</div>
         </div>
         <div class="flex-align-spacebetween padding-top10 paddingX10">
-          <div>科室：{{rp.doctor.department}}</div>
-          <div>问诊编号：{{rp.chatId}}</div>
+          <div>科室：{{doctorInfo.department}}</div>
+          <div>问诊编号：{{chatInfo.chatId}}</div>
         </div>
         <div class="padding10X paddingX10 border-bottom1">
           <div>诊断结果：
@@ -33,27 +33,43 @@
             <span class="marginX0">频率</span>
             <span class="margin-left26">单价</span>
           </div>
-          <div class="">
-            <el-select size="mini" clearable v-model="value8" filterable placeholder="输入药品名进行搜索" style="width: 200px">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
+          <div>
+            <el-form inline>
+              <el-form-item>
+                <el-select @change="changed" size="mini" value-key="id" clearable v-model="searchResult" remote :remote-method="searchMed" filterable placeholder="输入药品名进行搜索" style="width: 200px">
+                  <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input-number size="mini" v-model="medicineTemp.count" :max="99" :min="0" style="max-width: 64px"></el-input-number>
+              </el-form-item>
+              <el-form-item>
+                <el-select size="mini" clearable v-model="medicineTemp.unit" placeholder="" filterable style="width: 60px">
+                  <el-option v-for="item in unitOptions" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input size="mini" style="width: 140px" v-model="medicineTemp.method" placeholder="使用方式/每次用量"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-select size="mini" clearable v-model="medicineTemp.dosage" placeholder="" filterable style="width: 60px">
+                  <el-option v-for="item in frequency" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input  size="mini" v-model="searchResult.price" style="width: 40px"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <i @click="addTemp" class="el-icon-circle-plus color-theme cursor-pointer">
+                  <span class="font-size-5"> 添加</span>
+                </i>
+              </el-form-item>
+
+            </el-form>
             <!--<el-input size="mini" class="text-align-right" style="width: 60px"></el-input>-->
-            <el-input-number size="mini" v-model="medicineTemp.count" :max="99" :min="0"
-                             style="max-width: 64px"></el-input-number>
-            <el-select size="mini" clearable v-model="medicineTemp.unit" placeholder="" filterable style="width: 60px">
-              <el-option v-for="item in unitOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-            <el-input size="mini" style="width: 140px" placeholder="使用方式/每次用量"></el-input>
-            <el-select size="mini" clearable v-model="medicineTemp.dosage" placeholder="" filterable
-                       style="width: 60px">
-              <el-option v-for="item in frequency" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-            <el-input size="mini" style="width: 40px"></el-input>
-            <i class="el-icon-circle-plus color-theme cursor-pointer">
-              <span class="font-size-5"> 添加</span>
-            </i>
+
           </div>
           <section class="bgcolor-f1 paddingX10">
             <div class="flex-align border-bottom-dashed font-size-4 padding8X" v-for="(item,index) of medicineListTemp">
@@ -61,9 +77,9 @@
               <div class="padding-left10">{{item.count}}</div>
               <div class="">{{item.unit}}</div>
               <div class="padding-left30">{{item.method}}</div>
-              <div class="padding-left30">{{item.frequency}}</div>
+              <div class="padding-left30">{{item.dosage}}</div>
               <div class="padding-left30">{{item.price}}元</div>
-              <i class="padding-left20 color-red icon-delete cursor-pointer"></i>
+              <i @click="delTemp(index)" class="padding-left20 color-red icon-delete cursor-pointer"></i>
             </div>
           </section>
         </section>
@@ -102,28 +118,18 @@
     data() {
       return {
         zust,
+        chatInfo: {},
+        patientInfo: {},
+        doctorInfo: {},
         medicineTemp: {
           count: 0,
           unit: '',
           dosage: '',
+          method: ''
         },
-        medicineListTemp: [
-          {
-            name: '头孢克圬颗12312312312350mg*6袋 ',
-            count: 2,
-            unit: '盒',
-            method: '口服，每次40mg',
-            frequency: '每日三次',
-            price: '12'
-          }, {
-            name: '头孢克圬颗粒',
-            count: 2,
-            unit: '盒',
-            method: '口服，每次40mg',
-            frequency: '每日三次',
-            price: '12'
-          },
-        ],
+        medicineListTemp: [],
+        rules: {
+        },
         frequency: [{
           value: '每天一次',
           label: 'QD'
@@ -137,29 +143,17 @@
         options: [{
           value: '选项1',
           label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面龙须面龙须面龙须面龙须面龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
         }],
         unitOptions: [
           {
-            value: '选项1',
+            value: '盒',
             label: '盒'
           }, {
-            value: '选项2',
+            value: '支',
             label: '支'
           }
         ],
-        value8: '',
+        searchResult: '',
         //todo 处方中的药品列表内容 医生端选择药品后 在数据库以字符串拼接的方式储存，后端处理后返回给患者端
         rp: {
           rpId: '123123123',
@@ -216,6 +210,58 @@
           ]
         }
       }
+    },
+    mounted() {
+      this.doctorInfo = this.$store.state.userInfo
+      if (this.$store.state.chatInfo) {
+        this.getPatientInfo(this.chatInfo.patientId)
+        this.chatInfo = this.$store.state.chatInfo
+      }
+    },
+    methods: {
+      addTemp() {
+        let temp = {
+          ...this.medicineTemp,
+          price: this.searchResult.price,
+          name: this.searchResult.name
+        }
+        this.medicineListTemp.push(temp)
+      },
+      delTemp(index) {
+        this.medicineListTemp.splice(index,1)
+      },
+      changed() {
+        console.log(this.searchResult)
+        this.medicineTemp.price = this.searchResult.price
+      },
+      searchMed(keyword) {
+        this.$post({
+          url: this.$apis.getMedInfoList,
+          param: {
+            name: keyword,
+            pageNo: 1,
+            pageSize: 99
+          },
+          postType: 'json'
+        }).then(res => {
+          if (res.data.success) {
+            // this.showList = res.data.data.list
+            // this.total = res.data.data.total
+            this.options = res.data.data.list
+          }
+        })
+      },
+      getPatientInfo(id) {
+        this.$post({
+          url: this.$apis.getUserInfo,
+          param: {
+            userId: id
+          },
+          postType: 'json'
+        }).then(res => {
+          this.patientInfo = res.data.data
+        })
+      },
     }
   }
 </script>
@@ -236,6 +282,12 @@
   }
 </style>
 <style>
+  .el-form-item{
+    margin: 0;
+  }
+  .el-form--inline .el-form-item {
+    margin: 0;
+  }
   .el-input__inner {
     border-radius: 0;
     padding: 0 4px;

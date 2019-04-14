@@ -1,5 +1,5 @@
 <template>
-  <main class="margin60X marginX60">
+  <main class="margin30X marginX30">
     <section class="bgcolor-white shadow paddingX40 padding-top26">
       <el-form :model="searchForm" :inline="true">
         <el-form-item label="搜索药品">
@@ -208,6 +208,7 @@
                 ...this.addForm,
                 editPerson: this.$store.state.userInfo.name,
                 editTime: new Date().toLocaleString(),
+                isDelete: 0
               },
               postType: 'json'
             }).then(res => {

@@ -12,12 +12,24 @@
           <section class="margin-top10">
             <div class="shadow select-back"
                  :class="{'transform-1': selectIndex===1, 'transform-2': selectIndex===2, 'transform-3': selectIndex===3}"></div>
-            <div class="margin20X cursor-pointer" :class="{'font-size3': selectIndex===1}" @click="select(1)">
+            <div class="margin20X cursor-pointer color-ddd" :class="{'font-size3': selectIndex===1}" @click="select(1)">
               在线问诊&nbsp;&nbsp;<i class="icon-consultation"/></div>
             <div class="margin20X cursor-pointer" :class="{'font-size3': selectIndex===2}" @click="select(2)">
               问诊历史&nbsp;&nbsp;<i class="icon-clock2"/></div>
             <div class="margin20X cursor-pointer" :class="{'font-size3': selectIndex===3}" @click="select(3)">
               药品管理&nbsp;&nbsp;<i class="icon-dept"/></div>
+          </section>
+          <section class="margin-top80">
+            开启接诊
+            <el-switch
+              class="margin-top20"
+              style="display: block"
+              v-model="isOnline"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-icon-class="el-icon-check"
+              inactive-icon-class="el-icon-close">
+            </el-switch>
           </section>
         </div>
       </el-aside>
@@ -37,10 +49,14 @@
       return {
         head,
         doctorInfo: {
-          name: '板蓝根',
+          name: '医生',
         },
         selectIndex: 1,
+        isOnline: false
       }
+    },
+    mounted() {
+      this.doctorInfo = this.$store.state.userInfo
     },
     methods: {
       select(index) {
@@ -76,7 +92,7 @@
 
   .select-back {
     border-right: 4px #ffffff solid;
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(17, 17, 17, 0.25);
     height: 45px;
   }
 

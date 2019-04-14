@@ -28,7 +28,18 @@
       <el-aside width="550px" class="bgcolor-f6 border-right1">
         <!--todo 点击对话列表 将问诊信息和聊天记录存入缓存 有缓存则显示聊天室-->
         <chat-room v-if="chatId" :chatId="chatId"></chat-room>
-        <div v-else>请选择就诊请求</div>
+        <section v-else class="paddingX20 padding20X">
+          <div class="card-panel shadow padding10X width100" style="border-top: #32ae57 solid 6px;">
+            <div class="color-theme bold font-size2 border-bottom1 paddingX20 padding-bottom10">接诊步骤</div>
+            <div class="padding20X paddingX20" style="height: 200px;">
+              <el-steps direction="vertical" :active="3">
+                <el-step title="选择接诊请求" description="接受或拒绝问诊请求"></el-step>
+                <el-step title="开始问诊" description="与患者实时对话"></el-step>
+                <el-step title="开具处方/结束问诊" description="填写医嘱、开具处方"></el-step>
+              </el-steps>
+            </div>
+          </div>
+        </section>
       </el-aside>
       <el-main>
         <handle-rp></handle-rp>
@@ -59,7 +70,11 @@
     sockets: {
       refreshChatList() {
         console.log(`===> chat.vue 刷新问诊请求列表`)
-        this.$message.info('您有新的问诊请求！')
+        this.$notify({
+          title: '问诊',
+          message: '您有新的问诊请求！',
+          type: 'warning'
+        });
         this.getReqList()
       }
     },
@@ -100,11 +115,16 @@
         this.$post({
           url: this.$apis.getChatReqListByDocId,
           param: {
-            doctorId: this.$store.state.userInfo.userId
+            doctorId: this.$store.state.userInfo.userId,
           },
           postType: 'json'
         }).then(res => {
-          this.chatList = res.data.data
+          let temp = res.data.data
+          temp.forEach(item => {
+            if (item.chatStatus != 2) {
+              this.chatList.push(item)
+            }
+          })
         })
       }
     }

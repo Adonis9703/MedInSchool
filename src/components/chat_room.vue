@@ -3,7 +3,7 @@
     <header class="fixed" style="width: 549px;">
       <div class=" bgcolor-white padding10X">
         <div class="text-align-center" >
-          <span class="bold">{{chatInfo.patientName}}</span>
+          <span class="bold color-666">{{chatInfo.patientName}}</span>
         </div>
       </div>
     </header>
@@ -11,7 +11,7 @@
       <el-collapse-transition>
         <div class="paddingX40 margin-bottom20" v-if="showDetail">
           <div class="chat-detail shadow bgcolor-white margin-top20">
-            <div class="padding20X paddingX20 color-theme font-size4 border-bottom1 bold">
+            <div class="padding10X paddingX20 color-theme font-size4 border-bottom1 bold">
               问诊信息
             </div>
             <div class="paddingX20 padding20X">
@@ -83,7 +83,14 @@
         <el-button type="warning" slot="reference" icon="el-icon-document" circle @click="showDetail = !showDetail"></el-button>
       </el-popover>
       <el-popover
-        style="margin-left: 420px"
+        style="margin-left: 380px"
+        placement="left"
+        width="150"
+        trigger="hover"
+        content="结束问诊">
+        <el-button type="danger" slot="reference" icon="el-icon-close" circle></el-button>
+      </el-popover>
+      <el-popover
         placement="left"
         width="150"
         trigger="hover"
