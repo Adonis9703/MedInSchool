@@ -16,6 +16,9 @@ const mutations = {
   },
   setPatientSocket(state, value) {
     state.patientSocketId = value
+  },
+  setNavIndex(state, value) {
+    state.navIndex = value
   }
 }
 

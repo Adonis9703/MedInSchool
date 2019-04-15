@@ -1,6 +1,6 @@
 <template>
   <main class="margin30X marginX30">
-    <section class="bgcolor-white shadow paddingX40 padding-top26">
+    <section class="bgcolor-white shadow paddingX40 padding26X">
       <el-form :model="searchForm" :inline="true">
         <el-form-item label="搜索药品">
           <el-input size="small" placeholder="输入药品名称" clearable v-model="searchForm.keyword"></el-input>
@@ -10,7 +10,7 @@
       </el-form>
       <el-form :rules="rules" ref="addForm" :model="addForm" :inline="true">
         <el-form-item label="添加药品" prop="name">
-          <el-input v-model.trim="addForm.name" size="small" placeholder="药品名称（例：感冒灵胶囊 10粒/盒）"
+          <el-input clearable v-model.trim="addForm.name" size="small" placeholder="药品名称（例：感冒灵胶囊 10粒/盒）"
                     style="width: 300px"></el-input>
         </el-form-item>
         <el-form-item prop="amount">
@@ -28,7 +28,7 @@
       </el-form>
     </section>
     <section class="bgcolor-white shadow margin-top40 paddingX40 padding40X">
-      <el-table v-loading="showList.length==0" border :data="showList" stripe style="width: 100%">
+      <el-table v-loading="resultLoading" border :data="showList" stripe style="width: 100%">
         <el-table-column prop="name" label="药品名称" sortable></el-table-column>
         <el-table-column prop="amount" label="数量" sortable></el-table-column>
         <el-table-column prop="amountUnit" label="单位"></el-table-column>
@@ -54,10 +54,10 @@
         </el-pagination>
       </div>
     </section>
-    <el-dialog title="编辑药品" :visible.sync="showDialog" close-on-click-modal>
+    <el-dialog title="编辑药品" :visible.sync="showDialog" close-on-click-modal close-on-press-escape>
       <el-form :model="editForm" inline>
         <el-form-item label="添加药品" prop="name">
-          <el-input v-model.trim="editForm.name" size="small" placeholder="药品名称（例：感冒灵胶囊 10粒/盒）"
+          <el-input clearable v-model.trim="editForm.name" size="small" placeholder="药品名称（例：感冒灵胶囊 10粒/盒）"
                     style="width: 300px"></el-input>
         </el-form-item>
         <el-form-item prop="amount">
@@ -86,6 +86,7 @@
         showDialog: false,
         addLoading: false,
         searchLoading: false,
+        resultLoading: true,
         searchForm: {
           keyword: ''
         },
@@ -130,7 +131,7 @@
           this.editForm.amount = val.amount
           this.editForm.amountUnit = val.amountUnit
           this.editForm.price = val.price
-          this.doEdit(true).then(()=>{
+          this.doEdit(true).then(() => {
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -180,6 +181,7 @@
       },
       getMedList() {
         this.showList = []
+        this.resultLoading = true
         setTimeout(() => {
           this.$post({
             url: this.$apis.getMedInfoList,
@@ -193,6 +195,7 @@
             if (res.data.success) {
               this.showList = res.data.data.list
               this.total = res.data.data.total
+              this.resultLoading = false
             }
           })
         }, 800)

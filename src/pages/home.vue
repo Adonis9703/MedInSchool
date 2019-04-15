@@ -9,26 +9,37 @@
           <div class="margin-top10">
             {{doctorInfo.name}}
           </div>
-          <section class="margin-top10">
-            <div class="shadow select-back"
-                 :class="{'transform-1': selectIndex===1, 'transform-2': selectIndex===2, 'transform-3': selectIndex===3}"></div>
-            <div class="margin20X cursor-pointer color-ddd" :class="{'font-size3': selectIndex===1}" @click="select(1)">
-              在线问诊&nbsp;&nbsp;<i class="icon-consultation"/></div>
-            <div class="margin20X cursor-pointer" :class="{'font-size3': selectIndex===2}" @click="select(2)">
-              问诊历史&nbsp;&nbsp;<i class="icon-clock2"/></div>
-            <div class="margin20X cursor-pointer" :class="{'font-size3': selectIndex===3}" @click="select(3)">
-              药品管理&nbsp;&nbsp;<i class="icon-dept"/></div>
+          <section class="margin-top60">
+            <!--<div class="shadow select-back"-->
+            <!--:class="{'transform-1': selectIndex===1, 'transform-2': selectIndex===2, 'transform-3': selectIndex===3}"></div>-->
+            <div class="margin10X cursor-pointer padding10X"
+                 :class="{'bold': selectIndex === 1, 'shadow': selectIndex === 1}"
+                 @click="select(1)">
+              <i class="icon-consultation"/>&nbsp;&nbsp;在线问诊
+            </div>
+            <div class="margin10X cursor-pointer padding10X"
+                 :class="{'bold': selectIndex === 2,'shadow': selectIndex === 2}"
+                 @click="select(2)">
+              <i class="icon-clock2"/>&nbsp;&nbsp;问诊历史
+            </div>
+            <div class="margin10X cursor-pointer padding10X"
+                 :class="{'bold': selectIndex === 3,'shadow': selectIndex === 3}"
+                 @click="select(3)">
+              <i class="icon-dept"/>&nbsp;&nbsp;药品管理
+            </div>
+            <!--todo 退出前检查有无进行中的问诊，退出时自动下线-->
+            <div class="fixed bottom20 paddingX20 cursor-pointer" @click="quit">
+              <i class="el-icon-back font-size-3">&nbsp;退出</i>
+            </div>
           </section>
-          <section class="margin-top80">
+          <section class="margin-top80 bold">
             开启接诊
             <el-switch
-              class="margin-top20"
+              class="margin-top10"
               style="display: block"
               v-model="isOnline"
               active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-icon-class="el-icon-check"
-              inactive-icon-class="el-icon-close">
+              inactive-color="#ff4949">
             </el-switch>
           </section>
         </div>
@@ -52,15 +63,19 @@
           name: '医生',
         },
         selectIndex: 1,
-        isOnline: false
+        isOnline: false,
+        onlineDialog: false,
+        chattingCount: 0,
       }
     },
     mounted() {
+      this.selectIndex = this.$store.state.navIndex
       this.doctorInfo = this.$store.state.userInfo
     },
     methods: {
       select(index) {
         this.selectIndex = index
+        this.$store.commit('setNavIndex', index)
         if (index === 1) {
           this.$router.push({name: 'chat'})
         }
@@ -70,6 +85,41 @@
         if (index === 3) {
           this.$router.push({name: 'medicine'})
         }
+      },
+      quit() {
+        this.checkChatList().then(() => {
+          if (this.chattingCount > 0) {
+            this.$alert(`您有 ${this.chattingCount} 个问诊还在进行中，请完成问诊后再退出`, '提示', {
+              confirmButtonText: '确定',
+            });
+          } else {
+            this.$confirm('确定退出吗，退出后将暂停接诊', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消'
+            }).then(()=>{
+              this.$router.push({name: 'login'})
+            }).catch(()=>{});
+          }
+        })
+      },
+      async checkChatList() {
+        await this.$post({
+          url: this.$apis.getChatReqListByDocId,
+          param: {
+            doctorId: this.$store.state.userInfo.userId,
+          },
+          postType: 'json'
+        }).then(res => {
+          let temp = res.data.data
+          temp.forEach(item => {
+            if (item.chatStatus == 1) {
+              this.chattingCount++
+            }
+          })
+        })
+      },
+      updateOnlineStatus() {
+
       }
     }
   }

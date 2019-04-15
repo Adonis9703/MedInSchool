@@ -159,7 +159,9 @@
       }
     },
     mounted() {
-      this.getPatientInfo(this.chatInfo.patientId)
+      if (this.chatInfo) {
+        this.getPatientInfo(this.chatInfo.patientId)
+      }
       this.showDetail = this.chatInfo.chatStatus == 0
       // console.log('===> chat_room.vue 聊天室初始化成功')
       // this.$socket.on('historySaved', res => {

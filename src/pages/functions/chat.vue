@@ -8,7 +8,7 @@
             <img :src="patient" class="block" style="height: 50px;width: 50px;">
             <section class="width100 margin-left10">
               <div class="bold margin-bottom4 flex-spacebetween">{{item.patient}}
-                <span class="dot margin-right12"></span>
+                <!--<span class="dot margin-right12"></span>-->
               </div>
               <div class="font-size-2 flex-align-spacebetween color-666">
                 <div>{{item.patientName}}</div>
@@ -24,9 +24,12 @@
             <div v-if="item.chatStatus == 1" class="color-theme">问诊中</div>
           </div>
         </div>
+        <div v-if="chatList.length == 0" class="text-align-center padding60X">
+          <img :src="nodata" height="120">
+          <div class="color-999 font-size-2 margin-top20">暂无问诊请求</div>
+        </div>
       </el-aside>
       <el-aside width="550px" class="bgcolor-f6 border-right1">
-        <!--todo 点击对话列表 将问诊信息和聊天记录存入缓存 有缓存则显示聊天室-->
         <chat-room v-if="chatId" :chatId="chatId"></chat-room>
         <section v-else class="paddingX20 padding20X">
           <div class="card-panel shadow padding10X width100" style="border-top: #32ae57 solid 6px;">
@@ -53,12 +56,14 @@
   import patient from '~/default/user_heading.png'
   import chatRoom from '@/components/chat_room'
   import handleRp from "@/components/handle_rp";
+  import nodata from '~/default/default_nodata.png'
 
   export default {
     components: {handleRp: handleRp, chatRoom: chatRoom},
     name: "chat",
     data() {
       return {
+        nodata,
         doctor,
         patient,
         chatId: '',
@@ -80,13 +85,16 @@
     },
     mounted() {
       this.getReqList()
+      if (this.$store.state.chatInfo) {
+        this.selectReq(this.$store.state.chatInfo)
+      }
     },
     methods: {
       selectReq(item) {
-        this.chatId = item.chatId
-        this.getMessage()
         // this.getPatSocket(item)
         this.$store.commit('setChatInfo', item)
+        this.chatId = item.chatId
+        this.getMessage()
       },
       getMessage() {
         this.$post({

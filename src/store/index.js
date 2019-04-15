@@ -23,6 +23,7 @@ export default new Vuex.Store({
         return {
           userInfo: val.userInfo,
           token: val.token,
+          navIndex: val.navIndex,
         }
       }
     })

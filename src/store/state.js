@@ -1,4 +1,5 @@
 const  state = {
+  navIndex: 1,  //导航位置
   userInfo: null,
   token: null,
   chatInfo: null, //正在进行中的问诊
