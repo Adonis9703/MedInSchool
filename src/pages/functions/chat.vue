@@ -127,6 +127,7 @@
           },
           postType: 'json'
         }).then(res => {
+          this.chatList = []
           let temp = res.data.data
           temp.forEach(item => {
             if (item.chatStatus != 2) {

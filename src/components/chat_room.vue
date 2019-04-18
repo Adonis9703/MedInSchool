@@ -2,7 +2,7 @@
   <div>
     <header class="fixed" style="width: 549px;">
       <div class=" bgcolor-white padding10X">
-        <div class="text-align-center" >
+        <div class="text-align-center">
           <span class="bold color-666">{{chatInfo.patientName}}</span>
         </div>
       </div>
@@ -14,14 +14,15 @@
             <div class="padding10X paddingX20 color-theme font-size4 border-bottom1 bold">
               问诊信息
             </div>
-            <div class="paddingX20 padding20X">
+            <div class="paddingX20 padding20X font-size0">
               <div>
                 <span class="color-theme bold">患者：</span>
-                {{chatInfo.patientName}} · {{patientInfo.sex}} · {{patientInfo.age}}岁 · {{patientInfo.bloodType}}型血
+                {{chatInfo.patientName}} · {{chatInfo.patientSex}} · {{chatInfo.patientAge}}岁 ·
+                {{chatInfo.patientBloodType}}型血
               </div>
               <div class="margin-top10">
                 <span class="color-theme bold">过敏史：</span>
-                {{patientInfo.allergy || '暂无'}}
+                {{chatInfo.patientAllergy || '暂无'}}
               </div>
               <div class="margin-top10">
                 <span class="color-theme bold">备注：</span>
@@ -33,7 +34,8 @@
               </div>
             </div>
             <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs">
-              <img class="bgcolor-theme inline-block" height="143" width="143" :src="item" v-for="(item, index) in 4" :key="index">
+              <img class="inline-block bigger" height="143" width="143" :src="baseUrl+item"
+                   v-for="(item, index) in chatInfo.complainImgs" :key="index">
             </div>
           </div>
           <div v-if="chatInfo.chatStatus == 0" class="text-align-center padding20X">
@@ -80,7 +82,8 @@
         width="150"
         trigger="hover"
         content="查看问诊信息">
-        <el-button type="warning" slot="reference" icon="el-icon-document" circle @click="showDetail = !showDetail"></el-button>
+        <el-button type="warning" slot="reference" icon="el-icon-document" circle
+                   @click="showDetail = !showDetail"></el-button>
       </el-popover>
       <el-popover
         style="margin-left: 380px"
@@ -99,7 +102,7 @@
       </el-popover>
     </section>
     <footer class="fixed bottom0 bgcolor-white padding10X paddingX10 border-top1" style="width: 549px;">
-      <el-input placeholder="请输入内容" @keyup.enter.native="send"  v-model.trim="text">
+      <el-input placeholder="请输入内容" @keyup.enter.native="send" v-model.trim="text">
         <el-button slot="append" @click="send" :disabled="chatInfo.chatStatus==0">发送</el-button>
       </el-input>
     </footer>
@@ -139,6 +142,14 @@
           let container = this.$el.querySelector("#chatContainer");
           container.scrollTop = container.scrollHeight;
         })
+      },
+      chatInfo() {
+        let temp = this.chatInfo
+        this.showDetail = temp.chatStatus != 1;
+        if (temp.complainImgs === temp.complainImgs + '') {
+          temp.complainImgs = temp.complainImgs.split(',')
+          this.$store.commit('setChatInfo', temp)
+        }
       }
     },
     sockets: {
@@ -155,12 +166,17 @@
       return {
         text: '',
         showDetail: false,
-        patientInfo: {}
+        patientInfo: {},
+        baseUrl: this.$apis.base + '/'
       }
     },
     mounted() {
       if (this.chatInfo) {
-        this.getPatientInfo(this.chatInfo.patientId)
+        let temp = this.chatInfo
+        if (temp.complainImgs === temp.complainImgs + '') {
+          temp.complainImgs = temp.complainImgs.split(',')
+          this.$store.commit('setChatInfo', temp)
+        }
       }
       this.showDetail = this.chatInfo.chatStatus == 0
       // console.log('===> chat_room.vue 聊天室初始化成功')
@@ -176,20 +192,12 @@
       // })
     },
     methods: {
-      getPatientInfo(id) {
-        this.$post({
-          url: this.$apis.getUserInfo,
-          param: {
-            userId: id
-          },
-          postType: 'json'
-        }).then(res => {
-          this.patientInfo = res.data.data
-        })
-      },
       admissions() {
         let temp = this.$store.state.chatInfo
         temp.chatStatus = 1
+        if (temp.complainImgs !== temp.complainImgs + '') {
+          temp.complainImgs += ''
+        }
         this.$post({
           url: this.$apis.updateChatInfo,
           param: temp,
@@ -202,7 +210,10 @@
               message: '成功接诊，可以和患者进行沟通了！'
             })
             this.showDetail = false
-            this.$store.commit('setChatInfo', res.data.data)
+            let temp = res.data.data
+            console.log(res.data.data)
+            temp.complainImgs = temp.complainImgs.split(',')
+            this.$store.commit('setChatInfo', temp)
             this.$socket.emit('admissions', this.$store.state.chatInfo)
           }
         })
@@ -255,6 +266,11 @@
     border-bottom: #DDDDDD dashed 1px;
     &:last-child {
       border-bottom: none;
+    }
+
+    .bigger :hover {
+      transform: scale(1.2);
+      transition: all .3s;
     }
   }
 </style>

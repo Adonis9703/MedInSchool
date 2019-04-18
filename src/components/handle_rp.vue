@@ -1,6 +1,9 @@
 <template>
   <div class="paddingX20 padding20X">
-    <el-card shadow="hover" style="min-width: 680px">
+    <div v-if="!chatInfo">
+      开具处方
+    </div>
+    <el-card v-if="chatInfo && chatInfo.chatStatus==1" shadow="hover" style="min-width: 680px">
       <header class="flex-align">
         <img :src="zust" class="block" style="height: 30px;width: 100px">
         <div class="margin-left100 padding-left38 font-size4 color-333 bold">浙科医务室 处方笺</div>
@@ -9,8 +12,8 @@
         <div class=" border-bottom1 padding-bottom10">处方编号：{{rp.rpId}}</div>
         <div class="flex-align-spacebetween padding-top10 paddingX10">
           <div>姓名：{{chatInfo.patientName}}</div>
-          <div>性别：{{patientInfo.sex}}</div>
-          <div>年龄：{{patientInfo.age}}</div>
+          <div>性别：{{chatInfo.patientSex}}</div>
+          <div>年龄：{{chatInfo.patientAge}}</div>
         </div>
         <div class="flex-align-spacebetween padding-top10 paddingX10">
           <div>科室：{{doctorInfo.department}}</div>
@@ -94,7 +97,7 @@
         <div>合计：{{rp.totalPrice}}元</div>
       </footer>
     </el-card>
-    <div class="text-align-center fixed bottom20" style="width: 723px">
+    <div v-if="chatInfo && chatInfo.chatStatus==1" class="text-align-center fixed bottom20" style="width: 723px">
       <el-popover
         placement="top"
         width="150"
@@ -115,10 +118,19 @@
   import zust from '~/logo/logo_zust.png'
 
   export default {
+    computed: {
+      chatInfo: {
+        set: function () {
+        },
+        get: function () {
+          return this.$store.state.chatInfo
+        }
+      },
+    },
     data() {
       return {
         zust,
-        chatInfo: {},
+        // chatInfo: {},
         patientInfo: {},
         doctorInfo: {},
         medicineTemp: {
@@ -213,10 +225,6 @@
     },
     mounted() {
       this.doctorInfo = this.$store.state.userInfo
-      if (this.$store.state.chatInfo) {
-        this.getPatientInfo(this.chatInfo.patientId)
-        this.chatInfo = this.$store.state.chatInfo
-      }
     },
     methods: {
       addTemp() {
@@ -249,17 +257,6 @@
             // this.total = res.data.data.total
             this.options = res.data.data.list
           }
-        })
-      },
-      getPatientInfo(id) {
-        this.$post({
-          url: this.$apis.getUserInfo,
-          param: {
-            userId: id
-          },
-          postType: 'json'
-        }).then(res => {
-          this.patientInfo = res.data.data
         })
       },
     }
