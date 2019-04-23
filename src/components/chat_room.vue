@@ -33,7 +33,7 @@
                 {{chatInfo.complain}}
               </div>
             </div>
-            <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs">
+            <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs && chatInfo.complainImgs.length>0">
               <img class="inline-block bigger" height="143" width="143" :src="baseUrl+item"
                    v-for="(item, index) in chatInfo.complainImgs" :key="index">
             </div>
@@ -210,13 +210,25 @@
               message: '成功接诊，可以和患者进行沟通了！'
             })
             this.showDetail = false
-            let temp = res.data.data
-            console.log(res.data.data)
-            temp.complainImgs = temp.complainImgs.split(',')
-            this.$store.commit('setChatInfo', temp)
+            let temp1 = res.data.data
+            temp1.complainImgs = temp1.complainImgs.split(',')
+            this.$store.commit('setChatInfo', temp1)
             this.$socket.emit('admissions', this.$store.state.chatInfo)
+            let data = {
+              chatId: this.$store.state.chatInfo.chatId,
+              senderType: '1',
+              senderId: this.$store.state.userInfo.userId,
+              receiverId: this.$store.state.chatInfo.patientId,
+              msgText: '医生已经接诊，可以开始问诊啦',
+              msgTime: new Date().toTimeString().substring(0, 5),
+            }
+            this.$socket.emit('doc2service', data)
+            this.$store.commit('addMsgHistory', data)
           }
         })
+      },
+      refuse() {
+
       },
       send() {
         if (this.text === '') {

@@ -1,5 +1,5 @@
-let baseUrl = 'http://47.101.185.46:3000'
-// let baseUrl = 'http://127.0.0.1:3000'
+// let baseUrl = 'http://47.101.185.46:3000'
+let baseUrl = 'http://127.0.0.1:3000'
 
 export const api = {
   base: baseUrl,
