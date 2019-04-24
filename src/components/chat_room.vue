@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  v-loading="loading">
     <header class="fixed" style="width: 549px;">
       <div class=" bgcolor-white padding10X">
         <div class="text-align-center">
@@ -33,14 +33,14 @@
                 {{chatInfo.complain}}
               </div>
             </div>
-            <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs && chatInfo.complainImgs.length>0">
+            <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs && chatInfo.complainImgs!=''">
               <img class="inline-block bigger" height="143" width="143" :src="baseUrl+item"
                    v-for="(item, index) in chatInfo.complainImgs" :key="index">
             </div>
           </div>
           <div v-if="chatInfo.chatStatus == 0" class="text-align-center padding20X">
             <el-button type="success" slot="reference" icon="el-icon-check" circle @click="admissions"></el-button>
-            <el-button type="danger" slot="reference" icon="el-icon-close" circle></el-button>
+            <el-button type="danger" slot="reference" icon="el-icon-close" circle @click="refuse"></el-button>
           </div>
         </div>
       </el-collapse-transition>
@@ -91,7 +91,7 @@
         width="150"
         trigger="hover"
         content="结束问诊">
-        <el-button type="danger" slot="reference" icon="el-icon-close" circle></el-button>
+        <el-button type="danger" slot="reference" icon="el-icon-close" circle @click="endChat"></el-button>
       </el-popover>
       <el-popover
         placement="left"
@@ -106,7 +106,6 @@
         <el-button slot="append" @click="send" :disabled="chatInfo.chatStatus==0">发送</el-button>
       </el-input>
     </footer>
-
   </div>
 </template>
 
@@ -164,6 +163,7 @@
     },
     data() {
       return {
+        loading: false,
         text: '',
         showDetail: false,
         patientInfo: {},
@@ -193,22 +193,20 @@
     },
     methods: {
       admissions() {
-        let temp = this.$store.state.chatInfo
+        this.loading = true
+        let temp = {...this.$store.state.chatInfo}
         temp.chatStatus = 1
-        if (temp.complainImgs !== temp.complainImgs + '') {
-          temp.complainImgs += ''
-        }
+        temp.complainImgs += ''
         this.$post({
           url: this.$apis.updateChatInfo,
           param: temp,
           postType: 'json'
         }).then(res => {
           if (res.data.success) {
-            console.log('更新问诊信息')
-            this.$notify.success({
-              title: '成功',
-              message: '成功接诊，可以和患者进行沟通了！'
-            })
+            setTimeout(()=> {
+              this.loading = false
+            },1000)
+            this.$message.success('成功接诊，可以和患者进行沟通了')
             this.showDetail = false
             let temp1 = res.data.data
             temp1.complainImgs = temp1.complainImgs.split(',')
@@ -224,11 +222,54 @@
             }
             this.$socket.emit('doc2service', data)
             this.$store.commit('addMsgHistory', data)
+            this.$emit('refresh')
           }
         })
       },
       refuse() {
-
+        this.$prompt('请输入拒绝理由', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern:  /\S/,
+          inputErrorMessage: '内容不得为空'
+        }).then((val) => {
+          this.loading = true
+          let temp = this.$store.state.chatInfo
+          temp.chatStatus = 3
+          temp.refuseReason = val.value
+          if (temp.complainImgs !== temp.complainImgs + '') {
+            temp.complainImgs += ''
+          }
+          this.$post({
+            url: this.$apis.updateChatInfo,
+            param: temp,
+            postType: 'json'
+          }).then(res => {
+            this.$store.commit('setChatInfo', null)
+            this.$emit('refresh')
+            this.$message.success('成功拒绝问诊')
+            setTimeout(()=> {
+              this.loading = false
+            },1000)
+          })
+        }).catch(() => {
+        });
+      },
+      endChat() {
+        this.$post({
+          url: this.$apis.updateChatInfo,
+          param: {
+            chatId: this.chatInfo.chatId,
+            chatStatus: 2
+          },
+          postType: 'json'
+        }).then(res=> {
+          if (res.data.success) {
+            this.$message.success('成功结束问诊')
+            this.$store.commit('setChatInfo', null)
+            this.$emit('refresh')
+          }
+        })
       },
       send() {
         if (this.text === '') {

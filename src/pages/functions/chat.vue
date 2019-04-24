@@ -30,7 +30,7 @@
         </div>
       </el-aside>
       <el-aside width="550px" class="bgcolor-f6 border-right1">
-        <chat-room v-if="chatId" :chatId="chatId"></chat-room>
+        <chat-room v-if="chatInfo" :chatId="chatInfo.chatId" @refresh="getReqList"></chat-room>
         <section v-else class="paddingX20 padding20X">
           <div class="card-panel shadow padding10X width100" style="border-top: #32ae57 solid 6px;">
             <div class="color-theme bold font-size2 border-bottom1 paddingX20 padding-bottom10">接诊步骤</div>
@@ -71,7 +71,16 @@
       }
     },
     //store 里的数据实时渲染时 要在computed 里拿
-    computed: {},
+    computed: {
+      chatInfo: {
+        set: function () {
+
+        },
+        get: function () {
+          return this.$store.state.chatInfo
+        }
+      },
+    },
     sockets: {
       refreshChatList() {
         console.log(`===> chat.vue 刷新问诊请求列表`)
@@ -93,14 +102,14 @@
       selectReq(item) {
         // this.getPatSocket(item)
         this.$store.commit('setChatInfo', item)
-        this.chatId = item.chatId
+        // this.chatId = item.chatId
         this.getMessage()
       },
       getMessage() {
         this.$post({
           url: this.$apis.getMsgHistory,
           param: {
-            chatId: this.chatId
+            chatId: this.chatInfo.chatId
           },
           postType: 'json'
         }).then(res => {
@@ -130,7 +139,7 @@
           this.chatList = []
           let temp = res.data.data
           temp.forEach(item => {
-            if (item.chatStatus != 2) {
+            if (item.chatStatus != 2 && item.chatStatus !=3) {
               this.chatList.push(item)
             }
           })
