@@ -1,5 +1,5 @@
-// let baseUrl = 'http://47.101.185.46:3000'
-let baseUrl = 'http://127.0.0.1:3000'
+let baseUrl = 'http://47.101.185.46:3000'
+// let baseUrl = 'http://127.0.0.1:3000'
 
 export const api = {
   base: baseUrl,
@@ -12,4 +12,6 @@ export const api = {
   addMedInfo: baseUrl + '/addMedInfo',  //新增药品
   getMedInfoList: baseUrl + '/getMedInfoList', //获取药品列表
   updateMedInfo: baseUrl + '/updateMedInfo',  //更新药品信息
+  createRp: baseUrl + '/createRp', //新建处方单
+  getRpByChatId: baseUrl + '/getRpByChatId'  //通过问诊id获取处方
 }

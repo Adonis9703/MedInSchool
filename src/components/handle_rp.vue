@@ -21,7 +21,7 @@
         </div>
         <div class="padding10X paddingX10 border-bottom1">
           <div>诊断结果：
-            <input placeholder="填写诊断结果" class="bgcolor-f1 padding6X paddingX6 font-size-3" style="min-width: 500px"/>
+            <input v-model="rp.diagnosis" placeholder="填写诊断结果" class="bgcolor-f1 padding6X paddingX6 font-size-3" style="min-width: 500px"/>
           </div>
         </div>
       </section>
@@ -39,30 +39,35 @@
           <div>
             <el-form inline>
               <el-form-item>
-                <el-select @change="changed" size="mini" value-key="id" clearable v-model="searchResult" remote :remote-method="searchMed" filterable placeholder="输入药品名进行搜索" style="width: 200px">
+                <el-select @change="changed" size="mini" value-key="id" clearable v-model="searchResult" remote
+                           :remote-method="searchMed" filterable placeholder="输入药品名进行搜索" style="width: 200px">
                   <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-input-number size="mini" v-model="medicineTemp.count" :max="99" :min="0" style="max-width: 64px"></el-input-number>
+                <el-input-number size="mini" v-model="medicineTemp.count" :max="99" :min="0"
+                                 style="max-width: 64px"></el-input-number>
               </el-form-item>
               <el-form-item>
-                <el-select size="mini" clearable v-model="medicineTemp.unit" placeholder="" filterable style="width: 60px">
+                <el-select size="mini" clearable v-model="medicineTemp.unit" placeholder="" filterable
+                           style="width: 60px">
                   <el-option v-for="item in unitOptions" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-input size="mini" style="width: 140px" v-model="medicineTemp.method" placeholder="使用方式/每次用量"></el-input>
+                <el-input size="mini" style="width: 140px" v-model="medicineTemp.method"
+                          placeholder="使用方式/每次用量"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-select size="mini" clearable v-model="medicineTemp.dosage" placeholder="" filterable style="width: 60px">
+                <el-select size="mini" clearable v-model="medicineTemp.dosage" placeholder="" filterable
+                           style="width: 60px">
                   <el-option v-for="item in frequency" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-input  size="mini" v-model="searchResult.price" style="width: 40px"></el-input>
+                <el-input size="mini" v-model="searchResult.price" style="width: 40px"></el-input>
               </el-form-item>
               <el-form-item>
                 <i @click="addTemp" class="el-icon-circle-plus color-theme cursor-pointer">
@@ -87,13 +92,13 @@
           </section>
         </section>
       </main>
-      <section class="flex-spacebetween font-size-5 margin-top20 paddingX20 color-555">
-        <div>药品费用：{{rp.medPrice}}元</div>
-        <div>问诊费用：{{rp.chatPrice}}元</div>
-        <div>其他费用：{{rp.otherPrice}}元</div>
-      </section>
+      <!--<section class="flex-spacebetween font-size-5 margin-top20 paddingX20 color-555">-->
+        <!--<div>药品费用：{{rp.medPrice}}元</div>-->
+        <!--<div>问诊费用：{{rp.chatPrice}}元</div>-->
+        <!--<div>其他费用：{{rp.otherPrice}}元</div>-->
+      <!--</section>-->
       <footer class="flex-spacebetween paddingX20 padding40X font-size-4 bold">
-        <div>医生：{{rp.doctor.name}}</div>
+        <div>医生：{{doctorInfo.name}}</div>
         <div>合计：{{rp.totalPrice}}元</div>
       </footer>
     </el-card>
@@ -104,7 +109,7 @@
         trigger="hover"
         content="提交处方">
         <!--<el-button slot="reference">hover 激活</el-button>-->
-        <el-button type="success" slot="reference" icon="el-icon-check" circle></el-button>
+        <el-button @click="submitRp" type="success" slot="reference" icon="el-icon-check" circle></el-button>
       </el-popover>
     </div>
 
@@ -140,8 +145,7 @@
           method: ''
         },
         medicineListTemp: [],
-        rules: {
-        },
+        rules: {},
         frequency: [{
           value: '每天一次',
           label: 'QD'
@@ -152,10 +156,7 @@
           value: '每天两次',
           label: 'BID'
         },],
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }],
+        options: [],
         unitOptions: [
           {
             value: '盒',
@@ -163,70 +164,47 @@
           }, {
             value: '支',
             label: '支'
+          }, {
+            value: '袋',
+            label: '袋'
+          }, {
+            value: '瓶',
+            label: '瓶'
           }
         ],
         searchResult: '',
         //todo 处方中的药品列表内容 医生端选择药品后 在数据库以字符串拼接的方式储存，后端处理后返回给患者端
         rp: {
-          rpId: '123123123',
-          chatId: '2018121212312312312',
-          diagnosis: '吃饱了撑的',
-          medPrice: '60',
-          chatPrice: '1',
-          otherPrice: '0',
-          totalPrice: '61',
-          patient: {
-            name: 'Alex',
-            sex: '男',
-            age: '21',
-          },
-          doctor: {
-            name: '医生',
-            department: '全科',
-            title: '医师'
-          },
-          medicine: [
-            {
-              name: '头孢克圬颗啊啊啊啊啊啊啊啊啊啊啊啊啊啊粒 50mg*6袋',
-              amount: '2',
-              amountUnit: '盒',
-              dosage: '30',
-              dosageUnit: '毫克',
-              timeState: '一天3次',
-              day: '5',
-              method: '口服',
-              price: '20',
-            },
-            {
-              name: '头孢克圬撒大颗粒 50mg*6袋',
-              amount: '2',
-              amountUnit: '盒',
-              dosage: '30',
-              dosageUnit: '毫克',
-              timeState: '一天3次',
-              day: '5',
-              method: '口服',
-              price: '20',
-            },
-            {
-              name: '头孢克圬颗阿斯达说啊说的粒 50mg*6袋',
-              amount: '2',
-              amountUnit: '盒',
-              dosage: '30',
-              dosageUnit: '毫克',
-              timeState: '一天三次',
-              day: '5',
-              method: '口服',
-              price: '20',
-            },
-          ]
-        }
+          rpId: '',
+          chatId: '',
+          diagnosis: '',
+          medPrice: 0,
+          chatPrice: 0,
+          otherPrice: 0,
+          totalPrice: 0,
+          medicines: []
+        },
+      }
+    },
+    watch: {
+      medicineListTemp(val) {
+        this.rp.medPrice = 0
+        this.rp.totalPrice = 0
+        console.log('药品列表', this.medicineListTemp)
+        this.medicineListTemp.forEach(item => {
+          this.rp.medPrice += (item.price * item.count)
+        })
+        this.rp.totalPrice = this.rp.medPrice + this.rp.chatPrice + this.rp.otherPrice
+        console.log(this.rp.totalPrice)
       }
     },
     mounted() {
       this.doctorInfo = this.$store.state.userInfo
     },
     methods: {
+      initRp() {
+        this.rp.diagnosis = ''
+      },
       addTemp() {
         let temp = {
           ...this.medicineTemp,
@@ -236,10 +214,9 @@
         this.medicineListTemp.push(temp)
       },
       delTemp(index) {
-        this.medicineListTemp.splice(index,1)
+        this.medicineListTemp.splice(index, 1)
       },
       changed() {
-        console.log(this.searchResult)
         this.medicineTemp.price = this.searchResult.price
       },
       searchMed(keyword) {
@@ -259,6 +236,25 @@
           }
         })
       },
+      submitRp() {
+        if (!this.rp.diagnosis) {
+          this.$message.warning('诊断结果不得为空')
+          return
+        }
+        let temp = {...this.rp}
+        temp.chatId = this.chatInfo.chatId
+        temp.rpId = this.chatInfo.chatId
+        temp.medicines = JSON.stringify(this.medicineListTemp)
+        this.$post({
+          url: this.$apis.createRp,
+          param: temp,
+          postType: 'json'
+        }).then(res => {
+          if (res.data.success) {
+
+          }
+        })
+      }
     }
   }
 </script>
@@ -267,6 +263,7 @@
   .splitter {
     height: 1px;
   }
+
   .border-bottom-dashed {
     border-bottom: #999999 1px dashed;
     &:last-child {
@@ -279,12 +276,14 @@
   }
 </style>
 <style>
-  .el-form-item{
+  .el-form-item {
     margin: 0;
   }
+
   .el-form--inline .el-form-item {
     margin: 0;
   }
+
   .el-input__inner {
     border-radius: 0;
     padding: 0 4px;

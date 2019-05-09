@@ -1,18 +1,24 @@
 <template>
   <div class="pop">
     <!--医生-->
-    <div v-if="content.senderType==1" class=" flex-baseline float-right">
+    <div v-if="content.senderType==1" class="margin-bottom10 flex-baseline float-right">
       <div class="color-gray padding-right10 font-size-4">{{content.msgTime}}</div>
       <div class="msg bgcolor-theme color-white margin-right10 font-size4">
         {{content.msgText}}
+        <div v-if="content.msgImgs && content.msgImgs.length>0">
+          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 90rpx;height: 90rpx;">
+        </div>
       </div>
       <img :src="doctor" class="block margin-right20" style="width: 55px;height: 55px;"/>
     </div>
     <!--患者-->
-    <div v-else class=" flex-baseline float-left">
+    <div v-else class=" flex-baseline float-left margin-bottom10">
       <img :src="patient" class="block margin-left20" style="width: 55px;height: 55px;"/>
       <div class="msg bgcolor-white margin-left10">
         {{content.msgText}}
+        <div v-if="content.msgImgs && content.msgImgs.length>0">
+          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 90px;height: 90px;">
+        </div>
       </div>
       <div class="color-gray padding-left10 font-size-4">{{content.msgTime}}</div>
     </div>
@@ -30,7 +36,8 @@
     data() {
       return {
         doctor,
-        patient
+        patient,
+        baseUrl: this.$apis.base + '/'
       }
     }
   }
@@ -38,6 +45,16 @@
 
 <!--suppress CssInvalidPropertyValue -->
 <style lang="scss" scoped>
+  .bigger:hover {
+    transform: scale(4);
+    transition: all .3s;
+    z-index: 99;
+    position: absolute;
+  }
+  .bigger {
+    transform: scale(1);
+    transition: all .3s;
+  }
   .pop {
     color: #666666;
     .msg {

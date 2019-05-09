@@ -153,6 +153,9 @@
     },
     sockets: {
       service2doc(res) {
+        if (res.msgImgs) {
+          res.msgImgs = JSON.parse(res.msgImgs)
+        }
         console.log('===> chat_room.vue 获取服务器转发的消息', res)
         this.$store.commit('addMsgHistory', res)
       },
@@ -256,20 +259,28 @@
         });
       },
       endChat() {
-        this.$post({
-          url: this.$apis.updateChatInfo,
-          param: {
-            chatId: this.chatInfo.chatId,
-            chatStatus: 2
-          },
-          postType: 'json'
-        }).then(res=> {
-          if (res.data.success) {
-            this.$message.success('成功结束问诊')
-            this.$store.commit('setChatInfo', null)
-            this.$emit('refresh')
-          }
-        })
+        this.$prompt('请填写诊断结果', '提示', {
+          confirmButtonText: '提交并结束',
+          cancelButtonText: '继续问诊',
+          inputPattern:  /\S/,
+          inputErrorMessage: '内容不得为空'
+        }).then(val => {
+          this.$post({
+            url: this.$apis.updateChatInfo,
+            param: {
+              chatId: this.chatInfo.chatId,
+              chatStatus: 2,
+              diagnosis: val.value
+            },
+            postType: 'json'
+          }).then(res=> {
+            if (res.data.success) {
+              this.$message.success('成功结束问诊')
+              this.$store.commit('setChatInfo', null)
+              this.$emit('refresh')
+            }
+          })
+        }).catch(()=>{})
       },
       send() {
         if (this.text === '') {
@@ -294,6 +305,17 @@
   }
 </script>
 <style lang="scss" scoped>
+  .bigger:hover {
+    transform: scale(5);
+    transition: all .3s;
+    position: absolute;           /*是相对于前面的容器定位的，此处要放大的图片，不能使用position：relative；以及float，否则会导致z-index无效*/
+    z-index: 1000;
+  }
+  .bigger {
+    transform: scale(1);
+    transition: all .3s;
+  }
+
   .chat-detail {
     border-top: #32ae57 solid 6px;
   }

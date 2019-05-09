@@ -113,7 +113,13 @@
           },
           postType: 'json'
         }).then(res => {
-          this.$store.commit('setMsgHistory', res.data.data)
+          let msg = res.data.data
+          msg.forEach(item => {
+            if (item.msgImgs) {
+              item.msgImgs = JSON.parse(item.msgImgs)
+            }
+          })
+          this.$store.commit('setMsgHistory', msg)
         })
       },
       // getPatSocket(item) {
