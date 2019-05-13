@@ -19,6 +19,9 @@ const mutations = {
   },
   setNavIndex(state, value) {
     state.navIndex = value
+  },
+  setRpTemp(state, value) {
+    state.rpTemp = value
   }
 }
 

@@ -45,7 +45,7 @@
         </section>
       </el-aside>
       <el-main>
-        <handle-rp></handle-rp>
+        <handle-rp @refresh="getReqList"></handle-rp>
       </el-main>
     </el-container>
   </div>

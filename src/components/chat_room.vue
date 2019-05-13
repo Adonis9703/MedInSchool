@@ -1,5 +1,5 @@
 <template>
-  <div  v-loading="loading">
+  <div v-loading="loading">
     <header class="fixed" style="width: 549px;">
       <div class=" bgcolor-white padding10X">
         <div class="text-align-center">
@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs && chatInfo.complainImgs!=''">
-              <img class="inline-block bigger" height="143" width="143" :src="baseUrl+item"
+              <img class="inline-block bigger" style="width: 20%" :src="baseUrl+item"
                    v-for="(item, index) in chatInfo.complainImgs" :key="index">
             </div>
           </div>
@@ -86,22 +86,34 @@
                    @click="showDetail = !showDetail"></el-button>
       </el-popover>
       <el-popover
-        style="margin-left: 380px"
+        style="margin-left: 420px"
         placement="left"
         width="150"
         trigger="hover"
         content="结束问诊">
         <el-button type="danger" slot="reference" icon="el-icon-close" circle @click="endChat"></el-button>
       </el-popover>
+      <!--<el-popover-->
+        <!--placement="left"-->
+        <!--width="150"-->
+        <!--trigger="hover"-->
+        <!--content="为患者开具处方">-->
+        <!--<el-button type="success" slot="reference" icon="el-icon-edit" circle></el-button>-->
+      <!--</el-popover>-->
+    </section>
+    <div v-if="type=='history'" class="fixed bottom0 paddingX20 padding20X">
       <el-popover
-        placement="left"
+        placement="right"
         width="150"
         trigger="hover"
-        content="为患者开具处方">
-        <el-button type="success" slot="reference" icon="el-icon-edit" circle></el-button>
+        content="查看问诊信息">
+        <el-button type="warning" slot="reference" icon="el-icon-document" circle
+                   @click="showDetail = !showDetail"></el-button>
       </el-popover>
-    </section>
-    <footer class="fixed bottom0 bgcolor-white padding10X paddingX10 border-top1" style="width: 549px;">
+    </div>
+
+    <footer v-if="type!='history'" class="fixed bottom0 bgcolor-white padding10X paddingX10 border-top1"
+            style="width: 549px;">
       <el-input placeholder="请输入内容" @keyup.enter.native="send" v-model.trim="text">
         <el-button slot="append" @click="send" :disabled="chatInfo.chatStatus==0">发送</el-button>
       </el-input>
@@ -114,7 +126,7 @@
 
   export default {
     components: {chatPop: Chat_pop},
-    props: ['chatId'],
+    props: ['chatId', 'type'],
     name: 'chat_room',
     computed: {
       chatInfo: {
@@ -206,9 +218,9 @@
           postType: 'json'
         }).then(res => {
           if (res.data.success) {
-            setTimeout(()=> {
+            setTimeout(() => {
               this.loading = false
-            },1000)
+            }, 1000)
             this.$message.success('成功接诊，可以和患者进行沟通了')
             this.showDetail = false
             let temp1 = res.data.data
@@ -233,7 +245,7 @@
         this.$prompt('请输入拒绝理由', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputPattern:  /\S/,
+          inputPattern: /\S/,
           inputErrorMessage: '内容不得为空'
         }).then((val) => {
           this.loading = true
@@ -248,12 +260,13 @@
             param: temp,
             postType: 'json'
           }).then(res => {
+            this.$socket.emit('end', this.chatInfo)
             this.$store.commit('setChatInfo', null)
             this.$emit('refresh')
             this.$message.success('成功拒绝问诊')
-            setTimeout(()=> {
+            setTimeout(() => {
               this.loading = false
-            },1000)
+            }, 1000)
           })
         }).catch(() => {
         });
@@ -262,7 +275,7 @@
         this.$prompt('请填写诊断结果', '提示', {
           confirmButtonText: '提交并结束',
           cancelButtonText: '继续问诊',
-          inputPattern:  /\S/,
+          inputPattern: /\S/,
           inputErrorMessage: '内容不得为空'
         }).then(val => {
           this.$post({
@@ -273,14 +286,16 @@
               diagnosis: val.value
             },
             postType: 'json'
-          }).then(res=> {
+          }).then(res => {
             if (res.data.success) {
+              this.$socket.emit('end', this.chatInfo)
               this.$message.success('成功结束问诊')
               this.$store.commit('setChatInfo', null)
               this.$emit('refresh')
             }
           })
-        }).catch(()=>{})
+        }).catch(() => {
+        })
       },
       send() {
         if (this.text === '') {
@@ -306,11 +321,12 @@
 </script>
 <style lang="scss" scoped>
   .bigger:hover {
-    transform: scale(5);
+    transform: scale(2);
     transition: all .3s;
-    position: absolute;           /*是相对于前面的容器定位的，此处要放大的图片，不能使用position：relative；以及float，否则会导致z-index无效*/
+    position: absolute; /*是相对于前面的容器定位的，此处要放大的图片，不能使用position：relative；以及float，否则会导致z-index无效*/
     z-index: 1000;
   }
+
   .bigger {
     transform: scale(1);
     transition: all .3s;

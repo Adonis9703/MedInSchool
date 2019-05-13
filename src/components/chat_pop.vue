@@ -6,7 +6,7 @@
       <div class="msg bgcolor-theme color-white margin-right10 font-size4">
         {{content.msgText}}
         <div v-if="content.msgImgs && content.msgImgs.length>0">
-          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 90rpx;height: 90rpx;">
+          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 100%;">
         </div>
       </div>
       <img :src="doctor" class="block margin-right20" style="width: 55px;height: 55px;"/>
@@ -17,7 +17,7 @@
       <div class="msg bgcolor-white margin-left10">
         {{content.msgText}}
         <div v-if="content.msgImgs && content.msgImgs.length>0">
-          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 90px;height: 90px;">
+          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 40%">
         </div>
       </div>
       <div class="color-gray padding-left10 font-size-4">{{content.msgTime}}</div>
@@ -49,7 +49,7 @@
     transform: scale(4);
     transition: all .3s;
     z-index: 99;
-    position: absolute;
+    /*position: absolute;*/
   }
   .bigger {
     transform: scale(1);

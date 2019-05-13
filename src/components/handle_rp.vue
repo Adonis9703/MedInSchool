@@ -1,9 +1,11 @@
 <template>
   <div class="paddingX20 padding20X">
     <div v-if="!chatInfo">
-      开具处方
+      <div class="padding10X paddingX20 color-theme font-size4 bold">
+        选择问诊后在此区域开具处方
+      </div>
     </div>
-    <el-card v-if="chatInfo && chatInfo.chatStatus==1" shadow="hover" style="min-width: 680px">
+    <el-card v-if="chatInfo" shadow="hover" style="min-width: 680px">
       <header class="flex-align">
         <img :src="zust" class="block" style="height: 30px;width: 100px">
         <div class="margin-left100 padding-left38 font-size4 color-333 bold">浙科医务室 处方笺</div>
@@ -21,14 +23,15 @@
         </div>
         <div class="padding10X paddingX10 border-bottom1">
           <div>诊断结果：
-            <input v-model="rp.diagnosis" placeholder="填写诊断结果" class="bgcolor-f1 padding6X paddingX6 font-size-3" style="min-width: 500px"/>
+            <input :disabled="type=='history'" v-model="rp.diagnosis" placeholder="填写诊断结果" class="bgcolor-f1 padding6X paddingX6 font-size-3"
+                   style="min-width: 500px"/>
           </div>
         </div>
       </section>
       <main class="border-bottom1 padding-top20 padding-bottom60">
         <div class="font-size16 bold color-333" style="font-family: 'Sitka Display'">Rp.</div>
         <section class="color-555 font-size-3">
-          <div class="bgcolor-f1 padding4X bold">
+          <div v-if="type!='history'" class="bgcolor-f1 padding4X bold">
             <span class="marginX66">药品名称</span>
             <span class="marginX28">数量</span>
             <span>单位</span>
@@ -36,7 +39,7 @@
             <span class="marginX0">频率</span>
             <span class="margin-left26">单价</span>
           </div>
-          <div>
+          <div v-if="type!='history'">
             <el-form inline>
               <el-form-item>
                 <el-select @change="changed" size="mini" value-key="id" clearable v-model="searchResult" remote
@@ -87,15 +90,15 @@
               <div class="padding-left30">{{item.method}}</div>
               <div class="padding-left30">{{item.dosage}}</div>
               <div class="padding-left30">{{item.price}}元</div>
-              <i @click="delTemp(index)" class="padding-left20 color-red icon-delete cursor-pointer"></i>
+              <i v-if="type!='history'" @click="delTemp(index)" class="padding-left20 color-red icon-delete cursor-pointer"></i>
             </div>
           </section>
         </section>
       </main>
       <!--<section class="flex-spacebetween font-size-5 margin-top20 paddingX20 color-555">-->
-        <!--<div>药品费用：{{rp.medPrice}}元</div>-->
-        <!--<div>问诊费用：{{rp.chatPrice}}元</div>-->
-        <!--<div>其他费用：{{rp.otherPrice}}元</div>-->
+      <!--<div>药品费用：{{rp.medPrice}}元</div>-->
+      <!--<div>问诊费用：{{rp.chatPrice}}元</div>-->
+      <!--<div>其他费用：{{rp.otherPrice}}元</div>-->
       <!--</section>-->
       <footer class="flex-spacebetween paddingX20 padding40X font-size-4 bold">
         <div>医生：{{doctorInfo.name}}</div>
@@ -123,6 +126,7 @@
   import zust from '~/logo/logo_zust.png'
 
   export default {
+    props: ['type'],
     computed: {
       chatInfo: {
         set: function () {
@@ -131,6 +135,14 @@
           return this.$store.state.chatInfo
         }
       },
+      rpTemp: {
+        set: function () {
+        },
+        get: function () {
+          return this.$store.state.rpTemp
+        }
+
+      }
     },
     data() {
       return {
@@ -187,6 +199,11 @@
       }
     },
     watch: {
+      rpTemp() {
+        console.log('111', this.rpTemp)
+        this.rp = this.rpTemp
+        this.medicineListTemp = JSON.parse(this.rpTemp.medicines)
+      },
       medicineListTemp(val) {
         this.rp.medPrice = 0
         this.rp.totalPrice = 0
@@ -202,6 +219,7 @@
       this.doctorInfo = this.$store.state.userInfo
     },
     methods: {
+
       initRp() {
         this.rp.diagnosis = ''
       },
@@ -241,9 +259,15 @@
           this.$message.warning('诊断结果不得为空')
           return
         }
+        let patientId = this.chatInfo.patientId
+        let doctorId = this.doctorInfo.userId
+        let dateTemp = new Date()
+        let date = this.$date.formatWithPatternDate('yyyymmdd', dateTemp)
+        let time = dateTemp.toTimeString().substring(0, 8).replace(new RegExp(':', 'g'), '')
+        this.rp.rpId = date + time + patientId.substring(patientId.length - 4) + doctorId.substring(doctorId.length - 4)
+
         let temp = {...this.rp}
         temp.chatId = this.chatInfo.chatId
-        temp.rpId = this.chatInfo.chatId
         temp.medicines = JSON.stringify(this.medicineListTemp)
         this.$post({
           url: this.$apis.createRp,
@@ -252,6 +276,46 @@
         }).then(res => {
           if (res.data.success) {
 
+            this.updateChat()
+          }
+        })
+      },
+      updateChat() {
+        this.$post({
+          url: this.$apis.updateChatInfo,
+          param: {
+            chatId: this.chatInfo.chatId,
+            rpId: this.rp.rpId
+          },
+          postType: 'json'
+        }).then(res => {
+          if (res.data.success) {
+            this.$socket.emit('rp', this.$store.state.chatInfo)
+            this.$confirm('成功开具处方, 是否结束问诊?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.endChat()
+            }).catch(() => {
+            });
+          }
+        })
+      },
+      endChat() {
+        this.$post({
+          url: this.$apis.updateChatInfo,
+          param: {
+            chatId: this.chatInfo.chatId,
+            chatStatus: 2
+          },
+          postType: 'json'
+        }).then(res => {
+          if (res.data.success) {
+            this.$socket.emit('end', this.chatInfo)
+            this.$message.success('问诊结束成功！')
+            this.$store.commit('setChatInfo', null)
+            this.$emit('refresh')
           }
         })
       }
@@ -260,6 +324,10 @@
 </script>
 
 <style lang="scss" scoped>
+  .chat-detail {
+    border-top: #32ae57 solid 6px;
+  }
+
   .splitter {
     height: 1px;
   }

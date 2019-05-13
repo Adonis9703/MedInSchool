@@ -74,6 +74,7 @@
     },
     methods: {
       select(index) {
+        this.$store.commit('setChatInfo', null)
         this.selectIndex = index
         this.$store.commit('setNavIndex', index)
         if (index === 1) {
