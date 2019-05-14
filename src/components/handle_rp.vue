@@ -307,7 +307,8 @@
           url: this.$apis.updateChatInfo,
           param: {
             chatId: this.chatInfo.chatId,
-            chatStatus: 2
+            chatStatus: 2,
+            diagnosis: this.rp.diagnosis
           },
           postType: 'json'
         }).then(res => {

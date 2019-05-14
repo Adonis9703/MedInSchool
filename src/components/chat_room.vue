@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class="paddingX20 padding-bottom20" v-if="chatInfo.complainImgs && chatInfo.complainImgs!=''">
-              <img class="inline-block bigger" style="width: 20%" :src="baseUrl+item"
+              <img class="inline-block bigger" style="width: 120px" :src="baseUrl+item"
                    v-for="(item, index) in chatInfo.complainImgs" :key="index">
             </div>
           </div>
@@ -321,9 +321,9 @@
 </script>
 <style lang="scss" scoped>
   .bigger:hover {
-    transform: scale(2);
+    transform: scale(4);
     transition: all .3s;
-    position: absolute; /*是相对于前面的容器定位的，此处要放大的图片，不能使用position：relative；以及float，否则会导致z-index无效*/
+    /*position: absolute; !*是相对于前面的容器定位的，此处要放大的图片，不能使用position：relative；以及float，否则会导致z-index无效*!*/
     z-index: 1000;
   }
 

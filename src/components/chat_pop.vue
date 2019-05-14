@@ -15,9 +15,15 @@
     <div v-else class=" flex-baseline float-left margin-bottom10">
       <img :src="patient" class="block margin-left20" style="width: 55px;height: 55px;"/>
       <div class="msg bgcolor-white margin-left10">
-        {{content.msgText}}
+        {{content.msgText || ''}}
         <div v-if="content.msgImgs && content.msgImgs.length>0">
-          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 40%">
+          <img class="inline-block bigger" v-for="(item, index) in content.msgImgs" :key="index" :src="baseUrl+item" style="width: 160px">
+        </div>
+        <div v-if="content.msgRadio && content.msgRadio.length>0">
+          <audio controls="controls">
+            <source :src="baseUrl+content.msgRadio" type="audio/aac" />
+            Your browser does not support this audio format.
+          </audio>
         </div>
       </div>
       <div class="color-gray padding-left10 font-size-4">{{content.msgTime}}</div>
@@ -46,7 +52,7 @@
 <!--suppress CssInvalidPropertyValue -->
 <style lang="scss" scoped>
   .bigger:hover {
-    transform: scale(4);
+    transform: scale(3);
     transition: all .3s;
     z-index: 99;
     /*position: absolute;*/

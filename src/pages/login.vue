@@ -50,7 +50,8 @@
           url: this.$apis.login,
           param: {
             userId: this.userId,
-            password: this.password
+            password: this.password,
+            type: 1
           },
           postType: 'json'
         }).then(res => {
@@ -60,7 +61,7 @@
             this.$socket.emit('refresh', res.data.data)
             this.$router.push({name: 'chat'})
           } else {
-            this.$message.warning('账号密码错误！')
+            this.$message.warning(res.data.message)
           }
         })
       }
