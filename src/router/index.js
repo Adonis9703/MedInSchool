@@ -5,6 +5,7 @@ import home from '../pages/home'
 import chat from '../pages/functions/chat'
 import history from '../pages/functions/history'
 import medcine from '../pages/functions/medicine'
+import doctor from  '../pages/functions/doctor'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
           path: '/medicine',
           name: 'medicine',
           component: medcine
+        },
+        {
+          path: '/doctor',
+          name: 'doctor',
+          component: doctor
         }
       ]
     }

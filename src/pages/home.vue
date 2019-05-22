@@ -12,7 +12,7 @@
           <section class="margin-top60">
             <!--<div class="shadow select-back"-->
             <!--:class="{'transform-1': selectIndex===1, 'transform-2': selectIndex===2, 'transform-3': selectIndex===3}"></div>-->
-            <div class="margin10X cursor-pointer padding10X"
+            <div v-if="doctorInfo.userType != 2" class="margin10X cursor-pointer padding10X"
                  :class="{'bold': selectIndex === 1, 'shadow': selectIndex === 1}"
                  @click="select(1)">
               <i class="icon-consultation"/>&nbsp;&nbsp;在线问诊
@@ -26,6 +26,11 @@
                  :class="{'bold': selectIndex === 3,'shadow': selectIndex === 3}"
                  @click="select(3)">
               <i class="icon-dept"/>&nbsp;&nbsp;药品管理
+            </div>
+            <div class="margin10X cursor-pointer padding10X"
+                 :class="{'bold': selectIndex === 4,'shadow': selectIndex === 4}"
+                 @click="select(4)">
+              <i class="icon-personal2-fill"/>&nbsp;&nbsp;医生管理
             </div>
             <!--todo 退出前检查有无进行中的问诊，退出时自动下线-->
             <div class="fixed bottom20 paddingX20 cursor-pointer" @click="quit">
@@ -79,12 +84,12 @@
         this.$store.commit('setNavIndex', index)
         if (index === 1) {
           this.$router.push({name: 'chat'})
-        }
-        if (index === 2) {
+        } else if (index === 2) {
           this.$router.push({name: 'history'})
-        }
-        if (index === 3) {
+        } else if (index === 3) {
           this.$router.push({name: 'medicine'})
+        } else if (index === 4) {
+          this.$router.push({name: 'doctor'})
         }
       },
       quit() {
@@ -97,9 +102,10 @@
             this.$confirm('确定退出吗，退出后将暂停接诊', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消'
-            }).then(()=>{
+            }).then(() => {
               this.$router.push({name: 'login'})
-            }).catch(()=>{});
+            }).catch(() => {
+            });
           }
         })
       },
@@ -111,6 +117,7 @@
           },
           postType: 'json'
         }).then(res => {
+          this.chattingCount = 0
           let temp = res.data.data
           temp.forEach(item => {
             if (item.chatStatus == 1) {
