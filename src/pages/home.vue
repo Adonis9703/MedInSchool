@@ -17,7 +17,7 @@
                  @click="select(1)">
               <i class="icon-consultation"/>&nbsp;&nbsp;在线问诊
             </div>
-            <div class="margin10X cursor-pointer padding10X"
+            <div v-if="doctorInfo.userType != 2" class="margin10X cursor-pointer padding10X"
                  :class="{'bold': selectIndex === 2,'shadow': selectIndex === 2}"
                  @click="select(2)">
               <i class="icon-clock2"/>&nbsp;&nbsp;问诊历史
@@ -37,16 +37,16 @@
               <i class="el-icon-back font-size-3">&nbsp;退出</i>
             </div>
           </section>
-          <section class="margin-top80 bold">
-            开启接诊
-            <el-switch
-              class="margin-top10"
-              style="display: block"
-              v-model="isOnline"
-              active-color="#13ce66"
-              inactive-color="#ff4949">
-            </el-switch>
-          </section>
+          <!--<section class="margin-top80 bold">-->
+            <!--开启接诊-->
+            <!--<el-switch-->
+              <!--class="margin-top10"-->
+              <!--style="display: block"-->
+              <!--v-model="isOnline"-->
+              <!--active-color="#13ce66"-->
+              <!--inactive-color="#ff4949">-->
+            <!--</el-switch>-->
+          <!--</section>-->
         </div>
       </el-aside>
       <el-main>
@@ -98,7 +98,7 @@
             this.$alert(`您有 ${this.chattingCount} 个问诊还在进行中，请完成问诊后再退出`, '提示', {
               confirmButtonText: '确定',
             });
-          } else {
+          } else if (this.$store.state.userInfo.userType !=2) {
             this.$confirm('确定退出吗，退出后将暂停接诊', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消'
@@ -106,6 +106,8 @@
               this.$router.push({name: 'login'})
             }).catch(() => {
             });
+          } else {
+            this.$router.push({name: 'login'})
           }
         })
       },

@@ -174,6 +174,15 @@
         this.getDocList()
       },
       editMed(val) {
+        console.log(this.$store.state.userInfo)
+        if (this.$store.state.userInfo.userType!=2) {
+          this.$message({
+            type: 'warning',
+            message: '您不是管理员，无法进行操作'
+          })
+          return
+        }
+
         this.showDialog = true
         this.editForm.userId = val.userId
         this.editForm.name = val.name
