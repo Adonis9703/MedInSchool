@@ -1,10 +1,7 @@
 # MedInSchool
 
-浙科医务室 医生端+后台
+浙科医务室 医生端
 
-现阶段 h5学生端，h5医生端
-
-后期预计小程序化
 ## 技术栈
 
 >前端：Vue，Vue-router，Vuex，Vue-cli，Axios，scss
